@@ -44,8 +44,8 @@ function fetchSizeChart() {
         if (xhr.readyState === 4) {
             if (xhr.status === 200 && xhr.responseText) {
                 var response = JSON.parse(xhr.responseText);
-                if (response && response.sizeChart) {
-                    renderSizeChart(response.sizeChart);
+                if (response && response.sizechart_data) {
+                    renderSizeChart(response.sizechart_data);
                 } else {
                     renderDefaultSizeChart();
                 }
@@ -58,10 +58,29 @@ function fetchSizeChart() {
     xhr.send();
 }
 
+// Function to render the size chart table with the provided data
 function renderSizeChart(sizeChart) {
-    // Existing renderSizeChart function code...
-}
+    // Start with the opening tags for the table and tbody
+    var tableHTML = '<table class="size-chart"><tbody>';
 
+    // Loop over each row in the size chart data
+    sizeChart.forEach(function (row) {
+        tableHTML += '<tr>';
+        // Loop over each cell in the row
+        Object.entries(row).forEach(function ([key, value]) {
+            // Add a th for the header cell, or a td for data cells
+            var cellTag = key === 'header' ? 'th' : 'td';
+            tableHTML += `<${cellTag}>${value}</${cellTag}>`;
+        });
+        tableHTML += '</tr>';
+    });
+
+    // Close the tbody and table tags
+    tableHTML += '</tbody></table>';
+
+    // Insert the table into the DOM - for example, into a div with the ID 'size-chart-container'
+    document.getElementById('size-chart-container').innerHTML = tableHTML;
+}
 function renderDefaultSizeChart() {
     var defaultSizeChart = [
         {
