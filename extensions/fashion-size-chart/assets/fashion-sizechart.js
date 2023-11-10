@@ -2,7 +2,7 @@ console.log(window.Shopify.shop);
 var pElement = document.getElementById('sizechartproductid');
 
 // To get the value of 'theId' attribute
-var theIdValue = pElement.getAttribute('data-theProductId');
+var theIdValue = pElement.getAttribute('data-product-id');
 console.log(theIdValue);
 
 function initSizeChart() {
@@ -34,5 +34,91 @@ function initSizeChart() {
         }
     }
 }
+function fetchSizeChart() {
+    var productId = document.querySelector('p[data-product-id]').getAttribute('data-product-id');
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https:/lara.com/api/sizechart/get?shop=' + window.Shopify.shop + '&product_id=' + productId, true);
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200 && xhr.responseText) {
+                var response = JSON.parse(xhr.responseText);
+                if (response && response.sizeChart) {
+                    renderSizeChart(response.sizeChart);
+                } else {
+                    renderDefaultSizeChart();
+                }
+            } else {
+                renderDefaultSizeChart();
+            }
+        }
+    };
+
+    xhr.send();
+}
+
+function renderSizeChart(sizeChart) {
+    // Existing renderSizeChart function code...
+}
+
+function renderDefaultSizeChart() {
+    var defaultSizeChart = [
+        {
+            header: 'Size',
+            XS: 'XS',
+            S: 'S',
+            M: 'M',
+            L: 'L',
+            // Add more sizes as needed
+        },
+        {
+            header: 'EU Size',
+            XS: '34',
+            S: '36',
+            M: '38',
+            L: '40',
+            // Add more EU sizes as needed
+        },
+        {
+            header: 'US Size',
+            XS: '2',
+            S: '4',
+            M: '6',
+            L: '8',
+            // Add more US sizes as needed
+        },
+        {
+            header: 'Chest (in)',
+            XS: '32-34',
+            S: '34-36',
+            M: '36-38',
+            L: '38-40',
+            // Add more chest measurements as needed
+        },
+        {
+            header: 'Waist (in)',
+            XS: '24-26',
+            S: '26-28',
+            M: '28-30',
+            L: '30-32',
+            // Add more waist measurements as needed
+        },
+        {
+            header: 'Hips (in)',
+            XS: '34-36',
+            S: '36-38',
+            M: '38-40',
+            L: '40-42',
+            // Add more hip measurements as needed
+        },
+        // Add more rows for other measurements as needed
+    ];
+
+    renderSizeChart(defaultSizeChart);
+}
+
+// Call the function to fetch and render the size chart
+fetchSizeChart();
 
 initSizeChart();
