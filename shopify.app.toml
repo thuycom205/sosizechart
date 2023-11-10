@@ -1,0 +1,28 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+name = "premium-subsidiary-app"
+client_id = "8ae78fd311f9834c80f2b1a4c01057e4"
+application_url = "https://lara.com"
+embedded = true
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "write_products"
+
+[auth]
+redirect_urls = [
+  "https://lara.com/auth/callback",
+  "https://lara.com/auth/shopify/callback",
+  "https://lara.com/api/auth/callback",
+  "https://lara.com/.shopify/graphiql/auth/callback"
+]
+
+[webhooks]
+api_version = "2023-10"
+
+[pos]
+embedded = false
+
+[build]
+automatically_update_urls_on_dev = false
+dev_store_url = "wapstoremuoimot.myshopify.com"
