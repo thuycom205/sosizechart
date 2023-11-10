@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Size Chart</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<style>
+    .size-chart-container {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        max-width: 100%;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .size-chart-container h1 {
+        color: #323232;
+        font-size: 24px;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+    }
+
+    .size-chart-scroll {
+        overflow-x: auto;
+    }
+
+    .size-chart {
+        min-width: 600px;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .size-chart th,
+    .size-chart td {
+        border: 1px solid #ddd;
+        padding: 12px 15px;
+        text-align: center;
+    }
+
+    .size-chart th {
+        background-color: #f5f5f5;
+        color: #323232;
+        font-weight: normal;
+    }
+
+    .size-chart tbody tr:nth-child(even) td {
+        background-color: #f9f9f9;
+    }
+
+    @media screen and (max-width: 768px) {
+        .size-chart-container {
+            padding: 15px;
+        }
+
+        .size-chart-container h1 {
+            font-size: 20px;
+        }
+
+        .size-chart {
+            font-size: 14px;
+        }
+
+        .size-chart th,
+        .size-chart td {
+            padding: 10px;
+        }
+    }
+
+</style>
+<div class="size-chart-container">
+    <h1>Size Chart</h1>
+    <div class="size-chart-scroll">
+        <table class="size-chart">
+            <tbody>
+            <tr>
+                <th>Size</th>
+                <td>XS</td>
+                <td>S</td>
+                <td>M</td>
+                <td>L</td>
+                <!-- Add more sizes as needed -->
+            </tr>
+            <tr>
+                <th>EU Size</th>
+                <td>34</td>
+                <td>36</td>
+                <td>38</td>
+                <td>40</td>
+                <!-- Add more EU sizes as needed -->
+            </tr>
+            <tr>
+                <th>US Size</th>
+                <td>2</td>
+                <td>4</td>
+                <td>6</td>
+                <td>8</td>
+                <!-- Add more US sizes as needed -->
+            </tr>
+            <tr>
+                <th>Chest (in)</th>
+                <td>32-34</td>
+                <td>34-36</td>
+                <td>36-38</td>
+                <td>38-40</td>
+                <!-- Add more chest measurements as needed -->
+            </tr>
+            <tr>
+                <th>Waist (in)</th>
+                <td>24-26</td>
+                <td>26-28</td>
+                <td>28-30</td>
+                <td>30-32</td>
+                <!-- Add more waist measurements as needed -->
+            </tr>
+            <tr>
+                <th>Hips (in)</th>
+                <td>34-36</td>
+                <td>36-38</td>
+                <td>38-40</td>
+                <td>40-42</td>
+                <!-- Add more hip measurements as needed -->
+            </tr>
+            <!-- Add more rows for other measurements as needed -->
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
