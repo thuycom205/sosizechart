@@ -38,7 +38,7 @@ function fetchSizeChart() {
     var productId = document.querySelector('p[data-product-id]').getAttribute('data-product-id');
 
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https:/lara.com/api/sizechart/get?shop=' + window.Shopify.shop + '&product_id=' + productId, true);
+    xhr.open('GET', 'https://lara.com/api/sizechart/get?shop=' + window.Shopify.shop + '&product_id=' + productId, true);
 
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {

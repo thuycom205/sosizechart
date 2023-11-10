@@ -1,6 +1,6 @@
 {
-  "ratings": {
-    "stars": {
+  "settings": {
+    "name": {
       "label": "Ratings"
     },
     "home": {
