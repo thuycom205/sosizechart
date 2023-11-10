@@ -1,5 +1,7 @@
 <button is="party-button">
   <span class="visually-hidden">Start the party!</span>
+   <p id="sizechartproductid" data-theProductId="{{ product.id }}" >{{ product.id }}</p>
+    <p>{{ shop.id }}</p>
 </button>
 
 <style>
@@ -63,7 +65,7 @@
   "name": "Party",
   "target": "body",
   "stylesheet": "image-gallery.css",
-  "javascript": "party-button.js",
+  "javascript": "fashion-sizechart.js",
   "settings": []
 }
 {% endschema %}
