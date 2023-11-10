@@ -61,7 +61,7 @@ function fetchSizeChart() {
 // Function to render the size chart table with the provided data
 function renderSizeChart(sizeChart) {
     // Start with the opening tags for the table and tbody
-    var tableHTML = '<table class="size-chart"><tbody>';
+    var tableHTML = '<table class="sizeChart-table"><tbody>';
 
     // Loop over each row in the size chart data
     sizeChart.forEach(function (row) {
