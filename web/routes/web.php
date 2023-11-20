@@ -256,6 +256,7 @@ Route::post('/api/sizechart/fetch', [SizeChartController::class, 'getSizeChart']
 
 
 Route::post('/api/sizechart/persist', [SizeChartController::class, 'persistSizeChart']);
+Route::post('/api/sizecharts/fetchList', [SizeChartController::class, 'fetchList']);
 
 
 

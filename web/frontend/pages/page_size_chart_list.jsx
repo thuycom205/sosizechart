@@ -7,30 +7,55 @@ const SizeChartsPage = () => {
     const [selectedItems, setSelectedItems] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalItemCount, setTotalItemCount] = useState(0);
-    const itemsPerPage = 10;
+    const itemsPerPage = 50;
 
-
+    const gqueryParams = new URLSearchParams( window.DEVPARAMS);
+    const [shop, setShop] = useState(gqueryParams.get('shop') || '');
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Replace this with your API call
         const fetchSizeCharts = async () => {
-            // Simulate an API response
-            const response = {
-                sizeCharts: Array.from({ length: itemsPerPage }, (_, i) => ({
-                    id: `${(currentPage - 1) * itemsPerPage + i + 1}`,
-                    title: `Size Chart ${(currentPage - 1) * itemsPerPage + i + 1}`,
-                })),
-                totalItemCount: 50, // Replace with actual count from the API
+            // Define your parameters
+            const params = {
+                shop_name: shop,
+                page: currentPage,
+                items_per_page: itemsPerPage,
             };
 
-            setSizeCharts(response.sizeCharts);
-            setTotalItemCount(response.totalItemCount);
+            try {
+                const response = await fetch('https://lara.com/api/sizecharts/fetchList', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Include other headers as necessary, such as authorization tokens
+                    },
+                    body: JSON.stringify(params), // Send parameters as JSON payload
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                // Check if the response's content type is JSON
+                const contentType = response.headers.get("content-type");
+                let data;
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    data = await response.json(); // Parse response as JSON if it's JSON
+                } else {
+                    // You may handle other types of responses, or throw an error if unexpected
+                    data = response;
+                }
+
+                setSizeCharts(data.sizeCharts);
+                setTotalItemCount(data.totalItemCount);
+            } catch (error) {
+                console.error('Failed to fetch size charts:', error);
+            }
         };
 
         fetchSizeCharts();
     }, [currentPage, itemsPerPage]);
+
 
     const handleCreateNew = useCallback(() => {
         console.log('Create new size chart');
@@ -41,6 +66,8 @@ const SizeChartsPage = () => {
 
     const handleEdit = useCallback((id) => {
         console.log(`Edit size chart with id: ${id}`);
+        navigate(`/page_sizechart?editId=${id}` + `&shop_name=${shop}`) ;
+
         // TODO: Implement edit size chart logic
     }, []);
 

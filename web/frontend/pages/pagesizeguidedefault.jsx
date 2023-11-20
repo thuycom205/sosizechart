@@ -5,6 +5,8 @@ import EditableTable from "../components/EditableTable";
 import React, { useState,useEffect ,useCallback} from 'react';
 import RuleCondition from "../components/RuleCondition/RuleCondition";
 import SizeChartForm from "../components/SizeChart/SizeChartForm";
+import { useLocation } from 'react-router-dom';
+
 export default function Pagesizeguidedefault() {
     const { t } = useTranslation();
     const [ruleConditions, setRuleConditions] = useState({

@@ -118,9 +118,11 @@ const RuleCondition = ({
 
     const removeCollection = (collectionId) => {
         setCollections(collections.filter((collection) => collection.id !== collectionId));
+         onCollectionsChange(collections.filter((collection) => collection.id !== collectionId));
     };
     const removeProduct = (productId) => {
         setProducts(products.filter((product) => product.id !== productId));
+        onProductsChange(products.filter((product) => product.id !== productId));
 
         // Code to handle product removal
     };

@@ -6,8 +6,9 @@ import EditableTable from "../components/EditableTable";
 import React, { useState,useEffect ,useCallback} from 'react';
 import RuleCondition from "../components/RuleCondition/RuleCondition";
 import SizeChartForm from "../components/SizeChart/SizeChartForm";
-export default function Pagesizeguidedefault() {
+import { useLocation } from 'react-router-dom';
 
+export default function Pagesizeguidedefault() {
     const sampleData = {
         "id": 0,
         "sizechart_data": [
@@ -46,16 +47,15 @@ export default function Pagesizeguidedefault() {
     }
 
     const { t } = useTranslation();
-    const [sizeChart, setSizeChart] = useState(null);
+    const [sizeChart, setSizeChart] = useState([]);
 
     const [ruleConditions, setRuleConditions] = useState({
         rule_id: null, // Example initial rule ID, set as needed
         collections: [],
         products: []
     });
-    const queryParams = new URLSearchParams(location.search);
 
-    const [editId, setEditId] = useState(queryParams.get('editId') || '');
+    const [editId, setEditId] = useState(0);
 
     const [title, setTitle] = useState('');
 
@@ -110,110 +110,225 @@ export default function Pagesizeguidedefault() {
             // Handle any errors that occurred during submission
         }
     };
+    const handleSizeChartChange = useCallback((newTableData) => {
+        setSizeChart(newTableData);
+    }, []);
+
+    // This function will be called when a row is deleted from the size chart
+    const handleSizeChartRowDelete = useCallback((rowIndex) => {
+        const updatedTableData = sizeChart.filter((_, index) => index !== rowIndex);
+        setSizeChart(updatedTableData);
+    }, [sizeChart]);
+
+    // This function will be called when a column is deleted from the size chart
+    const handleSizeChartColumnDelete = useCallback((columnIndex) => {
+        const updatedTableData = sizeChart.map(row => {
+            const newRow = [...row];
+            newRow.splice(columnIndex, 1);
+            return newRow;
+        });
+        setSizeChart(updatedTableData);
+    }, [sizeChart]);
 
     // Fetch size chart data from API or use sample data if editId is 0
+    // useEffect(() => {
+    //     const queryParams = new URLSearchParams(location.search);
+    //     setEditId(queryParams.get('editId') || 0);
+    //
+    //     const fetchSizeChartData = async () => {
+    //                     try {
+    //                         if (parseInt(editId) !== 0 || true) {
+    //                             // Prepare the request body with the editId
+    //                             const requestBody = {editId: editId};
+    //
+    //                             // Send a POST request
+    //                             const response = await fetch('https://lara.com/api/sizechart/fetch', {
+    //                                 method: 'POST',
+    //                                 headers: {
+    //                                     'Content-Type': 'application/json',
+    //                                     // Include other headers as needed, e.g., authorization tokens
+    //                                 },
+    //                                 body: JSON.stringify(requestBody) // Convert the JS object to a JSON string
+    //                             });
+    //
+    //                             // Check if the response's content type is JSON
+    //                             const contentType = response.headers.get("content-type");
+    //                             let data;
+    //                             if (contentType && contentType.indexOf("application/json") !== -1) {
+    //                                 data = await response.json(); // Parse response as JSON if it's JSON
+    //                             } else {
+    //                                 // You may handle other types of responses, or throw an error if unexpected
+    //                                 data = response;
+    //                             }
+    //
+    //                             console.log('Fetched size chart:', data);
+    //                             // Set the state with the fetched data
+    //                             setSizeChart(data.sizechart_data);
+    //                             setTitle(data.title);
+    //                             setRuleConditions({
+    //                                 collections: data.rules.collections,
+    //                                 products: data.rules.products,
+    //                                 rule_id: data.rule_id
+    //                             });
+    //                         } else {
+    //                             // If editId is 0, use the sample data
+    //                             setSizeChart(sampleData.sizechart_data);
+    //                             setTitle(sampleData.title);
+    //                             setRuleConditions({
+    //                                 collections: sampleData.rules.collections,
+    //                                 products: sampleData.rules.products,
+    //                                 rule_id: sampleData.rule_id
+    //                             });
+    //                         }
+    //                     } catch (error) {
+    //                         console.error('Failed to fetch size chart:', error);
+    //                         // Fallback to sample data if there is an error
+    //                         setSizeChart(sampleData.sizechart_data);
+    //                         setTitle(sampleData.title);
+    //                         setRuleConditions({
+    //                             collections: [],
+    //                             products: [],
+    //                             rule_id: 0
+    //                         });
+    //                     }
+    //                 };
+    //
+    //
+    // fetchSizeChartData();
+    // }, []);
     useEffect(() => {
-                    const fetchSizeChartData = async () => {
-                        try {
-                            if (parseInt(editId) !== 0) {
-                                // Prepare the request body with the editId
-                                const requestBody = {editId: editId};
+        // The `location` object contains the current URL information
+        const queryParams = new URLSearchParams(location.search);
 
-                                // Send a POST request
-                                const response = await fetch('https://lara.com/api/sizechart/fetch', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        // Include other headers as needed, e.g., authorization tokens
-                                    },
-                                    body: JSON.stringify(requestBody) // Convert the JS object to a JSON string
-                                });
+        // Get 'editId' and 'shop_name' from the URL
+        const editIdParam = queryParams.get('editId');
+        const shopNameParam = queryParams.get('shop_name');
 
-                                // Check if the response's content type is JSON
-                                const contentType = response.headers.get("content-type");
-                                let data;
-                                if (contentType && contentType.indexOf("application/json") !== -1) {
-                                    data = await response.json(); // Parse response as JSON if it's JSON
-                                } else {
-                                    // You may handle other types of responses, or throw an error if unexpected
-                                    data = response;
-                                }
+        // Set the state variables
+        if (editIdParam) {
+            setEditId(editIdParam);
+            console.log(editId);
+        }
 
-                                // Set the state with the fetched data
-                                setSizeChart(data.sizechart_data);
-                                setTitle(data.title);
-                                setRuleConditions({
-                                    collections: data.rules.collections,
-                                    products: data.rules.products,
-                                    rule_id: data.rule_id
-                                });
-                            } else {
-                                // If editId is 0, use the sample data
-                                setSizeChart(sampleData.sizechart_data);
-                                setTitle(sampleData.title);
-                                setRuleConditions({
-                                    collections: sampleData.rules.collections,
-                                    products: sampleData.rules.products,
-                                    rule_id: sampleData.rule_id
-                                });
-                            }
-                        } catch (error) {
-                            console.error('Failed to fetch size chart:', error);
-                            // Fallback to sample data if there is an error
-                            setSizeChart(sampleData.sizechart_data);
-                            setTitle(sampleData.title);
-                            setRuleConditions({
-                                collections: [],
-                                products: [],
-                                rule_id: 0
-                            });
-                        }
-                    };
+        if (shopNameParam) {
+            setShop(shopNameParam);
+        }
+        const fetchSizeChartData = async () => {
+            try {
+                //if (parseInt(editId) !== 0) {
+                if (true) {
+                    const requestBody = { editId: queryParams.get('editId') };
+                    console.log('fetch sizechart request body' + requestBody);
 
-
-    fetchSizeChartData();
-    }, [editId, sampleData]);
-
-    return (
-        <Page fullWidth title="Size Chart">
-            <TitleBar
-                title={t("Size chart")}
-                primaryAction={{
-                    content: t("Save Size Chart"),
-                    onAction: () => {
-                        handleSubmit();
-                        console.log("Save Size Chart");
+                    const response = await fetch('https://lara.com/api/sizechart/fetch', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            // Include other headers as needed, e.g., authorization tokens
                         },
-                }}
-                secondaryActions={[
-                    {
-                        content: t("PageName.secondaryAction"),
-                        onAction: () => console.log("Secondary action"),
-                    },
-                ]}
-            />
-            <Layout>
+                        body: JSON.stringify(requestBody)
+                    });
 
-                <Layout.Section>
-                    <AlphaCard title="Size Chart">
-                    <SizeChartForm sizeChart={sizeChart}/>
-                    </AlphaCard>
-                    <AlphaCard title="Rule to apply size chart to products">
-                    <RuleCondition
-                        rule_id={ruleConditions.rule_id}
-                        icollections={ruleConditions.collections}
-                        iproducts={ruleConditions.products}
-                        onCollectionsChange={(collections) => handleRuleConditionChange('collections', collections)}
-                        onProductsChange={(products) => handleRuleConditionChange('products', products)}
-                        ruleType={ruleType} // Pass ruleType state
-                        onRuleTypeChange={handleRuleTypeChange} // Pass handler function
-                    />
+                    const contentType = response.headers.get("content-type");
+                    if (contentType && contentType.indexOf("application/json") !== -1) {
+                        const data = await response.json();
+                        console.log(data);
+                        setSizeChart(data.sizechart_data);
+                        setTitle(data.title);
+                        setRuleConditions({
+                            collections: data.rules ? data.rules.collections : [],
+                            products: data.rules ? data.rules.products : [],
+                            rule_id: data.rules ? data.rule_id : 0
+                        });
+                        console.log('Fetched size chart:', sizeChart);
+                        console.log(sizeChart);
+                        console.log( ruleConditions);
+                    } else {
+                        setSizeChart(response.sizechart_data);
+                        setTitle(response.title);
+                        setRuleConditions({
+                            collections: response.rules ? response.rules.collections : [],
+                            products: response.rules ? response.rules.products : [],
+                            rule_id: response.rules ? response.rule_id : 0
+                        });
+                        throw new Error("Received non-JSON response from server.");
+                    }
+                } else {
+                    setSizeChart(sampleData.sizechart_data);
+                    setTitle(sampleData.title);
+                    setRuleConditions({
+                        collections: sampleData.rules.collections,
+                        products: sampleData.rules.products,
+                        rule_id: sampleData.rule_id
+                    });
+                }
+            } catch (error) {
+                console.error('Failed to fetch size chart:', error);
+                setSizeChart(sampleData.sizechart_data);
+                setTitle(sampleData.title);
+                setRuleConditions({
+                    collections: [],
+                    products: [],
+                    rule_id: 0
+                });
+            }
+        };
+
+        // Correctly fetch size chart data when the component mounts or when editId changes
+        fetchSizeChartData();
+    }, [location]);
+
+    console.log(sizeChart);
+
+    if (sizeChart== null || sizeChart.length == 0 || sizeChart == undefined)  {
+        return <div>Loading...</div>;
+
+    } else {
+        return (
+            <Page fullWidth title="Size Chart">
+                <TitleBar
+                    title={t("Size chart")}
+                    primaryAction={{
+                        content: t("Save Size Chart"),
+                        onAction: () => {
+                            handleSubmit();
+                            console.log("Save Size Chart");
+                        },
+                    }}
+                    secondaryActions={[
+                        {
+                            content: t("PageName.secondaryAction"),
+                            onAction: () => console.log("Secondary action"),
+                        },
+                    ]}
+                />
+                <Layout>
+                    <Layout.Section>
+                        <AlphaCard title="Size Chart">
+                            <SizeChartForm
+                                tableData={sizeChart}
+                                onSizeChartChange={handleSizeChartChange}
+
+                            />
                         </AlphaCard>
-                </Layout.Section>
+                        <AlphaCard title="Rule to apply size chart to products">
+                            <RuleCondition
+                                rule_id={ruleConditions.rule_id}
+                                icollections={ruleConditions.collections}
+                                iproducts={ruleConditions.products}
+                                onCollectionsChange={(collections) => handleRuleConditionChange('collections', collections)}
+                                onProductsChange={(products) => handleRuleConditionChange('products', products)}
+                                ruleType={ruleType} // Pass ruleType state
+                                onRuleTypeChange={handleRuleTypeChange} // Pass handler function
+                            />
+                        </AlphaCard>
+                    </Layout.Section>
 
 
 
-            </Layout>
-        </Page>
-    );
+                </Layout>
+            </Page>
+        );
+    }
+
 }

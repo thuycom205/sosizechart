@@ -69,10 +69,11 @@ class SizeChartController extends Controller
 
     }
 
-    public function getSizeChart($request)
+    public function getSizeChart(Request $request)
 
     {
-        $id = $request->input('id'| 0);
+        $id = $request->input('editId');
+        $id?? $id = intval($request->input('editId'));
         if ($id == 0) {
             return response()->json($this->getSampleData());
         }
@@ -90,10 +91,49 @@ class SizeChartController extends Controller
             $chart->rules = $rules->rules ?? null;
             $chart->rule_id = $rules->id ?? null;
 
+
+        }
+        if (isset($sizeChart[0]) ) {
+
+            return response()->json($sizeChart[0]);
+        } else {
+            return response()->json($this->getSampleData());
         }
 
-        return response()->json($sizeChart);
     }
+
+    public function fetchList(Request $request)
+
+    {
+        $shopName = $request->input('shop_name');
+        $currentPage = $request->input('page', 1);
+        $itemsPerPage = $request->input('items_per_page', 10);
+
+        // Calculate the offset based on the current page
+        $offset = ($currentPage - 1) * $itemsPerPage;
+
+        // Get the total count of size charts for pagination
+        $totalItemCount = DB::table('sizecharts')->where('shop_name', $shopName)->count();
+
+        // Fetch size chart data with pagination
+        $sizeCharts = DB::table('sizecharts')
+                        ->where('shop_name', $shopName)
+                        ->offset($offset)
+                        ->limit($itemsPerPage)
+                        ->get();
+
+        // Fetch associated rules and unserialize data
+        foreach ($sizeCharts as &$chart) {
+            $chart->sizechart_data = unserialize($chart->sizechart_data);
+          //  $chart->rules = $this->getRulesForSizeChart($chart->id);
+        }
+
+        return response()->json([
+            'sizeCharts' => $sizeCharts,
+            'totalItemCount' => $totalItemCount
+        ]);
+    }
+
 
     private function getRulesForSizeChart($sizechartId)
     {
@@ -104,8 +144,8 @@ class SizeChartController extends Controller
         $rule = $rules[0] ?? null;
 
         if ($rule) {
-            $rule->rules = json_decode($rule->rules, true); // Decode JSON stored in rules column
-            $rule->product_ids = json_decode($rule->product_ids, true); // Decode JSON stored in product_ids column
+            $rule->rules = unserialize($rule->rules); // Decode JSON stored in rules column
+            $rule->product_ids = unserialize($rule->product_ids); // Decode JSON stored in product_ids column
         }
 
         return $rule;
@@ -154,10 +194,10 @@ class SizeChartController extends Controller
     ///
     public function persistSizeChart(Request $request)
     {
-        $id = $request->input('id');
+        $id = $request->input('editId');
         $sizechartData = $request->input('sizeChart');
         $imageUrl = $request->input('image_url' || 'https://cdn.shopify.com/s/files/1/0508/6409/1050/files/sizechart.png?v=1634260000');
-        $shopName = $request->input('shop_name'|'yourshop.myshopify.com');
+        $shopName = $request->input('shop_name');
         $isDefaultSizechart = $request->input('is_default_sizechart', 0);
         $title = $request->input('title', 'Untitled');
         if ($imageUrl ===null || $imageUrl == '') $imageUrl = 'https://cdn.shopify.com/s/files/1/0508/6409/1050/files/sizechart.png?v=1634260000';
@@ -197,6 +237,10 @@ class SizeChartController extends Controller
 
            // Initialize default values for $rule_id and $rule
             $rule_id = $ruleConditions['rule_id'] ?? 0;
+
+            if ($rule_id == 0) {
+                DB::delete('DELETE FROM sizechart_rule WHERE sizechart_id = ?', [$id]);
+            }
             $rule = [
                 'collections' => $ruleConditions['collections'] ?? [],
                 'products' => $ruleConditions['products'] ?? [],
