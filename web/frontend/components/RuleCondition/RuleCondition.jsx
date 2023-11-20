@@ -19,8 +19,47 @@ const RuleCondition = ({
     const [openCollectionResourcePicker, setOpenCollectionResourcePicker] = useState(false);
 
     useEffect(() => {
-        // Initial fetch for collections and products would be here
-    }, []);
+        if (!Array.isArray(icollections)) {
+            console.error('Expected icollections to be an array');
+            setCollections([]); // Set to default empty array if invalid
+        } else {
+            // Check if every item in the array has id, title, and handle
+            const isValid = icollections.every(col =>
+                col.hasOwnProperty('id') &&
+                col.hasOwnProperty('title') &&
+                col.hasOwnProperty('handle')
+            );
+
+            if (!isValid) {
+                console.error('Invalid collection object structure');
+                setCollections([]); // Set to default empty array if invalid
+            } else {
+                setCollections(icollections);
+            }
+        }
+    }, [icollections]);
+    //
+    useEffect(() => {
+        if (!Array.isArray(iproducts)) {
+            console.error('Expected iproducts to be an array');
+            setProducts([]); // Set to default empty array if invalid
+        } else {
+            // Check if every item in the array has id, title, and handle
+            const isValid = iproducts.every(prod =>
+                prod.hasOwnProperty('id') &&
+                prod.hasOwnProperty('title') &&
+                prod.hasOwnProperty('handle')
+            );
+
+            if (!isValid) {
+                console.error('Invalid product object structure');
+                setProducts([]); // Set to default empty array if invalid
+            } else {
+                setProducts(iproducts);
+            }
+        }
+    }, [iproducts]);
+
 
     const handleRuleTypeChange = (newValue) => {
         setSelectedRuleType(newValue);
@@ -28,18 +67,61 @@ const RuleCondition = ({
     };
 
     const handleCollectionSelection = (selectedPayload) => {
-        // Code to handle collection selection
+        setOpenCollectionResourcePicker(false);
+
+        // Extract the selected collections from the payload
+        const selectedCollections = selectedPayload.selection;
+
+        // Filter out collections that are already in the state
+        const newCollections = selectedCollections.filter(
+            (selectedCollection) => !collections.some((collection) => collection.id === selectedCollection.id)
+        );
+
+        // Map the filtered collections to the desired format
+        const formattedNewCollections = newCollections.map((collection) => ({
+            id: collection.id,
+            title: collection.title,
+            handle: collection.handle
+        }));
+
+        // Update the state to include the newly added collections
+        onCollectionsChange([...collections, ...formattedNewCollections]);
+
+        setCollections([...collections, ...formattedNewCollections]);
+
     };
 
     const handleProductSelection = (selectedPayload) => {
-        // Code to handle product selection
-    };
+        setOpenProductResourcePicker(false);
+
+        // Extract the selected products from the payload
+        const selectedProducts = selectedPayload.selection;
+
+        // Filter out products that are already in the state
+        const newProducts = selectedProducts.filter(
+            (selectedProduct) => !products.find((product) => product.id === selectedProduct.id)
+        );
+
+        // Map the filtered products to the desired format
+        const formattedNewProducts = newProducts.map((product) => ({
+            id: product.id,
+            title: product.title,
+            handle: product.handle
+        }));
+
+        // Update the state to include the newly added products
+        onProductsChange([...products, ...formattedNewProducts]);
+
+        setProducts([...products, ...formattedNewProducts]);
+
+    }
 
     const removeCollection = (collectionId) => {
-        // Code to handle collection removal
+        setCollections(collections.filter((collection) => collection.id !== collectionId));
     };
-
     const removeProduct = (productId) => {
+        setProducts(products.filter((product) => product.id !== productId));
+
         // Code to handle product removal
     };
 

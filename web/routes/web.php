@@ -19,6 +19,7 @@ use Shopify\Utils;
 use Shopify\Webhooks\Registry;
 use Shopify\Webhooks\Topics;
 use App\Models\SizeChart;
+use App\Http\Controllers\SizeChartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -250,4 +251,11 @@ Route::post( '/api/sizechart/save', function ( Request $request ) {
 
     echo "success";
 } );
+
+Route::post('/api/sizechart/fetch', [SizeChartController::class, 'getSizeChart']);
+
+
+Route::post('/api/sizechart/persist', [SizeChartController::class, 'persistSizeChart']);
+
+
 
