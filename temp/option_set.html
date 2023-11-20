@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Option Set Renderer</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f7f7f7;
+        padding: 20px;
+    }
+
+    #option-set-container {
+        max-width: 600px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .element-container {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    input[type=text], select {
+        width: 100%;
+        padding: 10px;
+        margin: 6px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    input[type=color] {
+        padding: 0;
+        width: 100%;
+        height: 40px;
+        border: none;
+        border-radius: 4px;
+    }
+
+    .tooltip {
+        display: block;
+        margin-top: 4px;
+        color: #666;
+        font-size: 0.9em;
+    }
+</style>
+</head>
+<body>
+<div id="option-set-container"></div>
+
+<script>
+// Mock API response
+const mockApiResponse = {"option_set_id":19,"name":"New Option Set","created_at":"2023-11-17 13:52:25","updated_at":"2023-11-17 13:52:25","elements":[{"option_id":39,"option_set_id":19,"type":"color_swatch","label":"Color_swatch","tooltip":"tool","is_required":1,"created_at":"2023-11-17 13:52:26","updated_at":"2023-11-17 13:52:26","options":[{"value_id":26,"option_id":39,"value":"#000000","additional_info":{"hue":228.40010457964084,"alpha":1,"brightness":0.7124025344848632,"saturation":0.7874998092651367},"created_at":"2023-11-17 13:52:33","updated_at":"2023-11-17 13:52:33","label":"Default Color"}]},{"option_id":40,"option_set_id":19,"type":"text","label":"el","tooltip":"","is_required":1,"created_at":"2023-11-17 13:52:33","updated_at":"2023-11-17 13:52:33","options":[]},{"option_id":41,"option_set_id":19,"type":"dropdown","label":"Dropdown","tooltip":"ff","is_required":1,"created_at":"2023-11-17 13:52:34","updated_at":"2023-11-17 13:52:34","options":[{"value_id":27,"option_id":41,"value":"x","additional_info":[],"created_at":"2023-11-17 13:52:37","updated_at":"2023-11-17 13:52:37","label":"x"},{"value_id":28,"option_id":41,"value":"m","additional_info":[],"created_at":"2023-11-17 13:52:39","updated_at":"2023-11-17 13:52:39","label":"m"}]},{"option_id":42,"option_set_id":19,"type":"color_swatch","label":"Color_swatch","tooltip":"color of tee","is_required":1,"created_at":"2023-11-17 13:52:40","updated_at":"2023-11-17 13:52:40","options":[{"value_id":29,"option_id":42,"value":"#000000","additional_info":{"hue":180.04189562441698,"alpha":1,"brightness":0,"saturation":0},"created_at":"2023-11-17 13:52:43","updated_at":"2023-11-17 13:52:43","label":"Default Color"}]},{"option_id":43,"option_set_id":19,"type":"text","label":"Email","tooltip":"enter your email","is_required":1,"created_at":"2023-11-17 13:52:44","updated_at":"2023-11-17 13:52:44","options":[]}]};
+
+const renderOptionSet = (data) => {
+    const container = document.getElementById('option-set-container');
+
+    data.elements.forEach((element) => {
+        const elementContainer = document.createElement('div');
+        elementContainer.className = 'element-container';
+
+        const label = document.createElement('label');
+        label.textContent = element.label;
+        elementContainer.appendChild(label);
+
+        if (element.tooltip) {
+            const tooltip = document.createElement('span');
+            tooltip.textContent = element.tooltip;
+            tooltip.className = 'tooltip';
+            elementContainer.appendChild(tooltip);
+        }
+
+        if (element.type === 'color_swatch') {
+            const colorInput = document.createElement('input');
+            colorInput.type = 'color';
+            colorInput.value = element.options.length > 0 ? element.options[0].value : '#000000';
+            elementContainer.appendChild(colorInput);
+        } else if (element.type === 'text') {
+            const textInput = document.createElement('input');
+            textInput.type = 'text';
+            elementContainer.appendChild(textInput);
+        } else if (element.type === 'dropdown') {
+            const select = document.createElement('select');
+            element.options.forEach((option) => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option.value;
+                optionElement.textContent = option.label;
+                select.appendChild(optionElement);
+            });
+            elementContainer.appendChild(select);
+        }
+
+        container.appendChild(elementContainer);
+    });
+};
+
+// Render the options using the mock API response
+renderOptionSet(mockApiResponse);
+</script>
+</body>
+</html>

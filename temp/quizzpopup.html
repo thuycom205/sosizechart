@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Quiz</title>
+<link rel="stylesheet" href="styles1.css">
+</head>
+<body>
+    <!-- Styles moved to an external CSS file for cleanliness -->
+
+    <div id="quiz-container" class="quiz-container">
+        <h1 class="quiz-title">Product Recommendation Quiz</h1>
+        <div id="question-container" class="question-container" style="display:none;">
+          <div id="question" class="question"></div>
+          <ul id="answer-options" class="answer-options"></ul>
+          <button id="next-button" class="next-button" onclick="nextQuestion()">Next</button>
+        </div>
+        <button id="start-button" class="start-button" onclick="startQuiz()">Start Quiz</button>
+      </div>
+
+<div id="results-container" style="display:none;">
+  <div id="results"></div>
+  <button onclick="startQuiz()">Restart Quiz</button>
+</div>
+<script src="quizz.js"></script>
+
+
+</body>
+</html>
