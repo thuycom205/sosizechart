@@ -27,13 +27,17 @@ export default function App() {
                   destination: "/pagename",
                 },
                   {
-                      label: t("NavigationMenu.List"),
-                      destination: "/pagesizechartlist",
+                      label: t("Size Chart List"),
+                      destination: "/page_size_chart_list",
                   },
-                  {
-                      label: t("NavigationMenu.SizeChart"),
-                      destination: "/pagesizechartform",
-                  },
+                  // {
+                  //     label: t("NavigationMenu.List"),
+                  //     destination: "/pagesizechartlist",
+                  // },
+                  // {
+                  //     label: t("NavigationMenu.SizeChart"),
+                  //     destination: "/pagesizechartform",
+                  // },
                   {
                       label: t("Default Size Chart"),
                       destination: "/pagesizeguidedefault",
