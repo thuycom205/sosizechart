@@ -35,8 +35,11 @@ export default function App() {
                       destination: "/pagesizechartform",
                   },
                   {
-                      label: t("SizeGuide"),
-                      destination: "/pagesizeguide",
+                      label: t("Default Size Chart"),
+                      destination: "/pagesizeguidedefault",
+                  }, {
+                      label: t(" Size Chart"),
+                      destination: "/page_sizechart",
                   },
               ]}
             />
