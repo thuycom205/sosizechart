@@ -80,44 +80,47 @@ export default function Pagesizeguidedefault() {
     ) : null;
 
     const handleSubmit = async () => {
-        try {
+        if (validateSizeChart()) { // Only proceed if the size chart is valid
+
+            try {
 
 
-            const requestBody = {
-                sizeChart: sizeChart,
-                title: title,
-                ruleConditions: ruleConditions,
-                ruleType: ruleType,
-                editId: editId,
-                shop_name: shop,
-                rule_id: ruleConditions.rule_id
-            };
+                const requestBody = {
+                    sizeChart: sizeChart,
+                    title: title,
+                    ruleConditions: ruleConditions,
+                    ruleType: ruleType,
+                    editId: editId,
+                    shop_name: shop,
+                    rule_id: ruleConditions.rule_id
+                };
 
-            const response = await fetch('https://lara.com/api/sizechart/persist', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // Add any other necessary headers, such as authorization tokens
-                },
-                body: JSON.stringify(requestBody) // Convert the requestBody object into a JSON string
-            });
+                const response = await fetch('https://lara.com/api/sizechart/persist', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Add any other necessary headers, such as authorization tokens
+                    },
+                    body: JSON.stringify(requestBody) // Convert the requestBody object into a JSON string
+                });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                // Process the response (if necessary)
+                const result = await response.json(); // Assuming the server responds with JSON
+                setToastMessage('Size chart saved successfully.');
+                setToastError(false);
+                setToastActive(true); // S
+                // You may want to perform some actions after saving, such as redirecting the user
+            } catch (error) {
+                // Handle any errors that occurred during submission
+                console.error('Failed to save size chart:', error);
+                setToastMessage('Failed to save size chart.');
+                setToastError(true);
+                setToastActive(true); // Show error toast
             }
-
-            // Process the response (if necessary)
-            const result = await response.json(); // Assuming the server responds with JSON
-            setToastMessage('Size chart saved successfully.');
-            setToastError(false);
-            setToastActive(true); // S
-            // You may want to perform some actions after saving, such as redirecting the user
-        } catch (error) {
-            // Handle any errors that occurred during submission
-            console.error('Failed to save size chart:', error);
-            setToastMessage('Failed to save size chart.');
-            setToastError(true);
-            setToastActive(true); // Show error toast
         }
     };
     const handleSizeChartChange = useCallback((newTableData) => {
@@ -140,6 +143,28 @@ export default function Pagesizeguidedefault() {
         setSizeChart(updatedTableData);
     }, [sizeChart]);
 
+    const validateSizeChart = () => {
+        // Check if title is empty
+        if (!title.trim()) {
+            setToastMessage('Title is required.');
+            setToastError(true);
+            setToastActive(true);
+            return false; // Validation failed
+        }
+
+        // Check if any cell in sizeChart is empty
+        for (let row of sizeChart) {
+            if (row.some(cell => cell.trim() === '')) {
+                setToastMessage('All fields in the size chart must have a value.');
+                setToastError(true);
+                setToastActive(true);
+                return false; // Validation failed
+            }
+        }
+
+        // If all checks pass, return true
+        return true;
+    };
 
     useEffect(() => {
         // The `location` object contains the current URL information

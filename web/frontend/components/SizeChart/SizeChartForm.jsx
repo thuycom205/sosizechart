@@ -89,7 +89,7 @@ const SizeChartForm = ({ tableData, onSizeChartChange,title, onTitleChange }) =>
     return (
         <Page title="Editable Size Chart">
             <Card sectioned>
-                <TextField label="Title" value={title} onChange={onTitleChange} />
+                <TextField label="Title *" value={title} onChange={onTitleChange} />
             </Card>
             <Card sectioned>
                 <div style={{ marginBottom: '1rem' }}>

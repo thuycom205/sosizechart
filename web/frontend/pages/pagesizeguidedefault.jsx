@@ -43,39 +43,42 @@ export default function Pagesizeguidedefault() {
     const [shop, setShop] = useState(gqueryParams.get('shop') || '');
     // Callback to update the rule conditions from the RuleCondition component
     const handleSubmit = async () => {
-        try {
+        if (validateSizeChart()) { // Only proceed if the size chart is valid
+
+            try {
 
 
-            const requestBody = {
-                sizeChart: sizeChart,
-                title: "Default Size Chart",
-                shop_name: shop,
-                is_default_sizechart: 1,
-            };
+                const requestBody = {
+                    sizeChart: sizeChart,
+                    title: "Default Size Chart",
+                    shop_name: shop,
+                    is_default_sizechart: 1,
+                };
 
-            const response = await fetch('https://lara.com/api/sizechart/persistDefault', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // Add any other necessary headers, such as authorization tokens
-                },
-                body: JSON.stringify(requestBody) // Convert the requestBody object into a JSON string
-            });
+                const response = await fetch('https://lara.com/api/sizechart/persistDefault', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Add any other necessary headers, such as authorization tokens
+                    },
+                    body: JSON.stringify(requestBody) // Convert the requestBody object into a JSON string
+                });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                // Process the response (if necessary)
+                const result = await response.json(); // Assuming the server responds with JSON
+
+                // You may want to perform some actions after saving, such as redirecting the user
+            } catch (error) {
+                setToastMessage('Failed to save size chart.');
+                setToastError(true);
+                setToastActive(true);
+                console.error('Failed to save size chart:', error);
+                // Handle any errors that occurred during submission
             }
-
-            // Process the response (if necessary)
-            const result = await response.json(); // Assuming the server responds with JSON
-
-            // You may want to perform some actions after saving, such as redirecting the user
-        } catch (error) {
-            setToastMessage('Failed to save size chart.');
-            setToastError(true);
-            setToastActive(true);
-            console.error('Failed to save size chart:', error);
-            // Handle any errors that occurred during submission
         }
     };
     const handleSizeChartChange = useCallback((newTableData) => {
@@ -88,7 +91,28 @@ export default function Pagesizeguidedefault() {
     const toastMarkup = toastActive ? (
         <Toast content={toastMessage} onDismiss={toggleActive} error={toastError} />
     ) : null;
+    const validateSizeChart = () => {
+        // Check if title is empty
+        if (!title.trim()) {
+            setToastMessage('Title is required.');
+            setToastError(true);
+            setToastActive(true);
+            return false; // Validation failed
+        }
 
+        // Check if any cell in sizeChart is empty
+        for (let row of sizeChart) {
+            if (row.some(cell => cell.trim() === '')) {
+                setToastMessage('All fields in the size chart must have a value.');
+                setToastError(true);
+                setToastActive(true);
+                return false; // Validation failed
+            }
+        }
+
+        // If all checks pass, return true
+        return true;
+    };
     useEffect(() => {
         // The `location` object contains the current URL information
         const queryParams = new URLSearchParams(location.search);
