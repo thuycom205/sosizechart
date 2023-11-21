@@ -7,6 +7,9 @@ import React, { useState,useEffect ,useCallback} from 'react';
 import RuleCondition from "../components/RuleCondition/RuleCondition";
 import SizeChartForm from "../components/SizeChart/SizeChartForm";
 import { useLocation } from 'react-router-dom';
+import { Toast } from '@shopify/polaris';
+import { Frame } from '@shopify/polaris';
+import { useNavigate } from "@shopify/app-bridge-react";
 
 export default function Pagesizeguidedefault() {
     const sampleData = {
@@ -27,24 +30,20 @@ export default function Pagesizeguidedefault() {
         "rule_id": 0,
         "rules": {
             "products": [
-                {
-                    "id": "gid://shopify/Product/8061849763989",
-                    "title": "bitter morning",
-                    "handle": "bitter-morning"
-                },
-                // ... other products
+
             ],
             "collections": [
-                {
-                    "id": "gid://shopify/Collection/214369730709",
-                    "title": "Home page",
-                    "handle": "frontpage"
-                }
                 // ... other collections
             ]
         }
 
     }
+    const navigate = useNavigate();
+
+    // New state for Toast
+    const [toastActive, setToastActive] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+    const [toastError, setToastError] = useState(false);
 
     const { t } = useTranslation();
     const [sizeChart, setSizeChart] = useState([]);
@@ -73,6 +72,13 @@ export default function Pagesizeguidedefault() {
             [type]: items
         }));
     };
+    const toggleActive = useCallback(() => setToastActive((active) => !active), []);
+
+    // Toast markup
+    const toastMarkup = toastActive ? (
+        <Toast content={toastMessage} onDismiss={toggleActive} error={toastError} />
+    ) : null;
+
     const handleSubmit = async () => {
         try {
 
@@ -102,10 +108,16 @@ export default function Pagesizeguidedefault() {
 
             // Process the response (if necessary)
             const result = await response.json(); // Assuming the server responds with JSON
-
+            setToastMessage('Size chart saved successfully.');
+            setToastError(false);
+            setToastActive(true); // S
             // You may want to perform some actions after saving, such as redirecting the user
         } catch (error) {
             // Handle any errors that occurred during submission
+            console.error('Failed to save size chart:', error);
+            setToastMessage('Failed to save size chart.');
+            setToastError(true);
+            setToastActive(true); // Show error toast
         }
     };
     const handleSizeChartChange = useCallback((newTableData) => {
@@ -212,6 +224,7 @@ export default function Pagesizeguidedefault() {
 
     } else {
         return (
+            <Frame>
             <Page fullWidth title="Size Chart">
                 <TitleBar
                     title={t("Size chart")}
@@ -223,9 +236,13 @@ export default function Pagesizeguidedefault() {
                     }}
                     secondaryActions={[
                         {
-                            content: t("PageName.secondaryAction"),
-                            onAction: () => console.log("Secondary action"),
-                        },
+                            content: t("Size Chart Management"),
+                            onAction: () => {
+                                window.DEVPARAMS;
+                                const host =
+                                    new URLSearchParams(window.DEVPARAMS).get("shop");
+                                navigate(`/page_size_chart_list` +`?shop_name=` +  host);
+                            },                        },
                     ]}
                 />
                 <Layout>
@@ -234,7 +251,8 @@ export default function Pagesizeguidedefault() {
                             <SizeChartForm
                                 tableData={sizeChart}
                                 onSizeChartChange={handleSizeChartChange}
-
+                                title={title}
+                                onTitleChange={setTitle}
                             />
                         </AlphaCard>
                         <AlphaCard title="Rule to apply size chart to products">
@@ -249,11 +267,11 @@ export default function Pagesizeguidedefault() {
                             />
                         </AlphaCard>
                     </Layout.Section>
-
-
-
                 </Layout>
+                {toastMarkup} {/* Render the Toast component */}
+
             </Page>
+            </Frame>
         );
     }
 

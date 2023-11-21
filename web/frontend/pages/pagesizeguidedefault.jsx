@@ -7,6 +7,9 @@ import React, { useState,useEffect ,useCallback} from 'react';
 import RuleCondition from "../components/RuleCondition/RuleCondition";
 import SizeChartForm from "../components/SizeChart/SizeChartForm";
 import { useLocation } from 'react-router-dom';
+import { Toast } from '@shopify/polaris';
+import { Frame } from '@shopify/polaris';
+import { useNavigate } from "@shopify/app-bridge-react";
 
 export default function Pagesizeguidedefault() {
     const sampleData = {
@@ -25,12 +28,16 @@ export default function Pagesizeguidedefault() {
         "is_default_sizechart": 1,
         "title": "Men's T-Shirts Size Chart",
     }
+    const [toastActive, setToastActive] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+    const [toastError, setToastError] = useState(false);
 
     const { t } = useTranslation();
     const [sizeChart, setSizeChart] = useState([]);
 
 
     const [title, setTitle] = useState('');
+    const navigate = useNavigate();
 
     const gqueryParams = new URLSearchParams( window.DEVPARAMS);
     const [shop, setShop] = useState(gqueryParams.get('shop') || '');
@@ -64,6 +71,9 @@ export default function Pagesizeguidedefault() {
 
             // You may want to perform some actions after saving, such as redirecting the user
         } catch (error) {
+            setToastMessage('Failed to save size chart.');
+            setToastError(true);
+            setToastActive(true);
             console.error('Failed to save size chart:', error);
             // Handle any errors that occurred during submission
         }
@@ -72,6 +82,12 @@ export default function Pagesizeguidedefault() {
         setSizeChart(newTableData);
     }, []);
 
+    const toggleActive = useCallback(() => setToastActive((active) => !active), []);
+
+    // Toast markup
+    const toastMarkup = toastActive ? (
+        <Toast content={toastMessage} onDismiss={toggleActive} error={toastError} />
+    ) : null;
 
     useEffect(() => {
         // The `location` object contains the current URL information
@@ -134,6 +150,7 @@ export default function Pagesizeguidedefault() {
 
     } else {
         return (
+            <Frame>
             <Page fullWidth title="Size Chart">
                 <TitleBar
                     title={t("Size chart")}
@@ -145,8 +162,13 @@ export default function Pagesizeguidedefault() {
                     }}
                     secondaryActions={[
                         {
-                            content: t("PageName.secondaryAction"),
-                            onAction: () => console.log("Secondary action"),
+                            content: t("Size Chart Management"),
+                            onAction: () => {
+                                window.DEVPARAMS;
+                                const host =
+                                    new URLSearchParams(window.DEVPARAMS).get("shop");
+                                navigate(`/page_size_chart_list` +`?shop_name=` +  host);
+                            },
                         },
                     ]}
                 />
@@ -161,7 +183,10 @@ export default function Pagesizeguidedefault() {
                         </AlphaCard>
                     </Layout.Section>
                 </Layout>
+                {toastMarkup} {/* Render the Toast component */}
+
             </Page>
+            </Frame>
         );
     }
 

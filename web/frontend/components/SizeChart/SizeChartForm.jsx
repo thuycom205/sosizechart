@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Card, Page, Button, TextField, Stack } from '@shopify/polaris';
 
-const SizeChartForm = ({ tableData, onSizeChartChange }) => {
+const SizeChartForm = ({ tableData, onSizeChartChange,title, onTitleChange }) => {
     // Check if there's more than one column to allow deletion
     const canDeleteColumn = tableData[0]?.length > 1;
 
@@ -88,6 +88,9 @@ const SizeChartForm = ({ tableData, onSizeChartChange }) => {
 
     return (
         <Page title="Editable Size Chart">
+            <Card sectioned>
+                <TextField label="Title" value={title} onChange={onTitleChange} />
+            </Card>
             <Card sectioned>
                 <div style={{ marginBottom: '1rem' }}>
                     <Button onClick={addRow}>Add Measurement</Button>

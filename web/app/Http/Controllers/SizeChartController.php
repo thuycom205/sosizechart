@@ -171,19 +171,9 @@ class SizeChartController extends Controller
             "rule_id" => 0,
             "rules" => [
                 "products" => [
-                    [
-                        "id" => "gid://shopify/Product/8061849763989",
-                        "title" => "bitter morning",
-                        "handle" => "bitter-morning"
-                    ],
                     // ... other products
                 ],
                 "collections" => [
-                    [
-                        "id" => "gid://shopify/Collection/214369730709",
-                        "title" => "Home page",
-                        "handle" => "frontpage"
-                    ]
                     // ... other collections
                 ]
             ]

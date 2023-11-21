@@ -14,6 +14,9 @@ export default function App() {
   // See documentation for <Routes /> for more info
   const pages = import.meta.globEager("./pages/**/!(*.test.[jt]sx)*.([jt]sx)");
   const { t } = useTranslation();
+    const hiddenLinkStyle = {
+        display: 'none', // This style will hide the element
+    };
 
   return (
     <PolarisProvider>
@@ -31,8 +34,10 @@ export default function App() {
                       label: t("Default Size Chart"),
                       destination: "/pagesizeguidedefault",
                   }, {
-                      label: t("Size Chart"),
+                      label: t("Add Size Chart"),
                       destination: "/page_sizechart",
+                      style: hiddenLinkStyle, // Apply the style to hide this link
+
                   },
               ]}
             />
