@@ -130,72 +130,7 @@ export default function Pagesizeguidedefault() {
         setSizeChart(updatedTableData);
     }, [sizeChart]);
 
-    // Fetch size chart data from API or use sample data if editId is 0
-    // useEffect(() => {
-    //     const queryParams = new URLSearchParams(location.search);
-    //     setEditId(queryParams.get('editId') || 0);
-    //
-    //     const fetchSizeChartData = async () => {
-    //                     try {
-    //                         if (parseInt(editId) !== 0 || true) {
-    //                             // Prepare the request body with the editId
-    //                             const requestBody = {editId: editId};
-    //
-    //                             // Send a POST request
-    //                             const response = await fetch('https://lara.com/api/sizechart/fetch', {
-    //                                 method: 'POST',
-    //                                 headers: {
-    //                                     'Content-Type': 'application/json',
-    //                                     // Include other headers as needed, e.g., authorization tokens
-    //                                 },
-    //                                 body: JSON.stringify(requestBody) // Convert the JS object to a JSON string
-    //                             });
-    //
-    //                             // Check if the response's content type is JSON
-    //                             const contentType = response.headers.get("content-type");
-    //                             let data;
-    //                             if (contentType && contentType.indexOf("application/json") !== -1) {
-    //                                 data = await response.json(); // Parse response as JSON if it's JSON
-    //                             } else {
-    //                                 // You may handle other types of responses, or throw an error if unexpected
-    //                                 data = response;
-    //                             }
-    //
-    //                             console.log('Fetched size chart:', data);
-    //                             // Set the state with the fetched data
-    //                             setSizeChart(data.sizechart_data);
-    //                             setTitle(data.title);
-    //                             setRuleConditions({
-    //                                 collections: data.rules.collections,
-    //                                 products: data.rules.products,
-    //                                 rule_id: data.rule_id
-    //                             });
-    //                         } else {
-    //                             // If editId is 0, use the sample data
-    //                             setSizeChart(sampleData.sizechart_data);
-    //                             setTitle(sampleData.title);
-    //                             setRuleConditions({
-    //                                 collections: sampleData.rules.collections,
-    //                                 products: sampleData.rules.products,
-    //                                 rule_id: sampleData.rule_id
-    //                             });
-    //                         }
-    //                     } catch (error) {
-    //                         console.error('Failed to fetch size chart:', error);
-    //                         // Fallback to sample data if there is an error
-    //                         setSizeChart(sampleData.sizechart_data);
-    //                         setTitle(sampleData.title);
-    //                         setRuleConditions({
-    //                             collections: [],
-    //                             products: [],
-    //                             rule_id: 0
-    //                         });
-    //                     }
-    //                 };
-    //
-    //
-    // fetchSizeChartData();
-    // }, []);
+
     useEffect(() => {
         // The `location` object contains the current URL information
         const queryParams = new URLSearchParams(location.search);

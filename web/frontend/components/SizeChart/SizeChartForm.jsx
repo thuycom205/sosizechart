@@ -1,104 +1,104 @@
 import React, { useState, useCallback } from 'react';
-import { IndexTable, Page, Card, TextField, Button, TextStyle } from '@shopify/polaris';
+import { Card, Page, Button, TextField, Stack } from '@shopify/polaris';
 
-const SizeChartForm = ({
-                           tableData, onSizeChartChange
-}) => {
-    // const [tableData, setTableData] = useState([
-    //     ['Size', 'S', 'M', 'L'],
-    //     ['EU Size', '46', '50', '54'],
-    //     ['US Size', '36', '40', '44'],
-    //     ['Chest (in)', '34-36', '38-40', '42-44'],
-    //     ['Waist (in)', '28-30', '32-34', '36-38'],]);
-    //
-    // setTableData(sizeChart);
+const SizeChartForm = ({ tableData, onSizeChartChange }) => {
+    // Check if there's more than one column to allow deletion
+    const canDeleteColumn = tableData[0]?.length > 1;
 
-    // Assume the first row contains headings
-    const headings = tableData.length > 0 ? tableData[0] : [];
-
+    // Handles change in cell value
     const handleCellChange = useCallback((rowIndex, columnIndex, value) => {
         const newData = [...tableData];
         newData[rowIndex][columnIndex] = value;
-        onSizeChartChange(newData); // Call the function passed from the parent
-    }, [tableData]);
+        onSizeChartChange(newData);
+    }, [tableData, onSizeChartChange]);
 
-    const rowMarkup = tableData.slice(1).map((row, rowIndex) => {
-        return (
-            <IndexTable.Row id={String(rowIndex)} key={rowIndex} position={rowIndex}>
-                {row.map((content, columnIndex) => (
-                    <IndexTable.Cell key={`${rowIndex}-${columnIndex}`}>
-                        <TextField
-                            value={content}
-                            onChange={(value) => handleCellChange(rowIndex + 1, columnIndex, value)}
-                            autoComplete="off"
-                        />
-                    </IndexTable.Cell>
-                ))}
-                <IndexTable.Cell>
-                    <Button destructive onClick={() => deleteRow(rowIndex)}>Delete</Button>
-                </IndexTable.Cell>
-            </IndexTable.Row>
-        );
-    });
-
-    // const deleteRow = useCallback((rowIndex) => {
-    //     const newData = [...tableData];
-    //     newData.splice(rowIndex + 1, 1); // +1 because we have sliced the first row of headings
-    //     onSizeChartChange(newData); // Update the parent state
-    // }, [tableData]);
-
-    const deleteRow = (rowIndex) => {
-        const newData = [...tableData];
-        newData.splice(rowIndex + 1, 1); // +1 because we have sliced the first row of headings
-        onSizeChartChange(newData); // Update the parent state
-    };
-    // Function to add a new row with default values
-    const addRow = () => {
+    // Adds a new row with default values
+    const addRow = useCallback(() => {
         const newRow = new Array(tableData[0].length).fill('');
-        newRow[0] = 'New Measurement';
-        onSizeChartChange([...tableData, newRow]);
-        // Default label for new rows
-       // setTableData([...tableData, newRow]);
-    };
+        const newData = [...tableData, newRow];
+        onSizeChartChange(newData);
+    }, [tableData, onSizeChartChange]);
 
-    // Function to add a new column with default values
-    const addColumn = () => {
-        const newColumnLabel = `Size ${String.fromCharCode(65 + tableData[0].length - 1)}`; // Generate next size label
-        const newData = tableData.map((row, index) => {
-            const newItem = index === 0 ? newColumnLabel : ''; // Add new size label on the first row
-            return [...row, newItem];
+    // Adds a new column with default values
+    const addColumn = useCallback(() => {
+        const newData = tableData.map(row => [...row, '']);
+        onSizeChartChange(newData);
+    }, [tableData, onSizeChartChange]);
+
+    // Deletes a specific row
+    const deleteRow = useCallback((rowIndex) => {
+        const newData = [...tableData];
+        newData.splice(rowIndex, 1);
+        onSizeChartChange(newData);
+    }, [tableData, onSizeChartChange]);
+
+    // Deletes a specific column
+    const deleteColumn = useCallback((columnIndex) => {
+        if (!canDeleteColumn) return;
+        const newData = tableData.map(row => {
+            const newRow = [...row];
+            newRow.splice(columnIndex, 1);
+            return newRow;
         });
         onSizeChartChange(newData);
+    }, [tableData, onSizeChartChange, canDeleteColumn]);
 
-        // setTableData(newData);
-    };
+    // Render the table with functionality to delete rows and columns
+    const tableMarkup = tableData.map((row, rowIndex) => (
+        <tr key={rowIndex}>
+            {row.map((cell, columnIndex) => (
+                <td key={`${rowIndex}-${columnIndex}`}>
+                    <TextField
+                        value={cell}
+                        onChange={(value) => handleCellChange(rowIndex, columnIndex, value)}
+                        autoComplete="off"
+                    />
+                </td>
+            ))}
+            <td>
+                <Button onClick={() => deleteRow(rowIndex)} destructive>
+                    Delete Measurement
+                </Button>
+            </td>
+        </tr>
+    ));
 
-    // Define the resource name for Polaris IndexTable
-    const resourceName = {
-        singular: 'measurement',
-        plural: 'measurements',
-    };
+    // Render the headers with functionality to delete columns
+    const headerMarkup = (
+        <tr>
+            {tableData[0].map((header, columnIndex) => (
+                <th key={`header-${columnIndex}`}>
+                    <Stack alignment="center">
+                        {/*<TextField*/}
+                        {/*    value={header}*/}
+                        {/*    onChange={(value) => handleCellChange(0, columnIndex, value)}*/}
+                        {/*    autoComplete="off"*/}
+                        {/*/>*/}
+                        {canDeleteColumn && columnIndex > 0 && (
+                            <Button onClick={() => deleteColumn(columnIndex)}  plain >
+                                Delete
+                            </Button>
+                        )}
+                    </Stack>
+                </th>
+            ))}
+            <th />
+        </tr>
+    );
 
     return (
         <Page title="Editable Size Chart">
-            <Card>
-                <IndexTable
-                    resourceName={resourceName}
-                    itemCount={tableData.length - 1} // We subtract one for the heading row
-                    headings={headings.map((heading, index) => (
-                        <IndexTable.Cell key={index}>
-                            <TextStyle variation="strong">{heading}</TextStyle>
-                        </IndexTable.Cell>
-                    ))}
-                    selectable={false}
-                >
-                    {rowMarkup}
-                </IndexTable>
-                <div style={{ marginTop: 'var(--p-space-3)', marginBottom: 'var(--p-space-3)'  }}>
-                    <Button onClick={() => addRow()}>Add Measurement</Button>
-                    <Button onClick={() => addColumn()}>Add Size</Button>
-                    {/* Add functionality for these button actions */}
+            <Card sectioned>
+                <div style={{ marginBottom: '1rem' }}>
+                    <Button onClick={addRow}>Add Measurement</Button>
+                    <Button onClick={addColumn} primary>
+                        Add Size
+                    </Button>
                 </div>
+                <table>
+                    <thead>{headerMarkup}</thead>
+                    <tbody>{tableMarkup}</tbody>
+                </table>
             </Card>
         </Page>
     );

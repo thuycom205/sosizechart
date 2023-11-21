@@ -22,27 +22,16 @@ export default function App() {
           <QueryProvider>
             <NavigationMenu
               navigationLinks={[
-                {
-                  label: t("NavigationMenu.pageName"),
-                  destination: "/pagename",
-                },
+
                   {
                       label: t("Size Chart List"),
                       destination: "/page_size_chart_list",
                   },
-                  // {
-                  //     label: t("NavigationMenu.List"),
-                  //     destination: "/pagesizechartlist",
-                  // },
-                  // {
-                  //     label: t("NavigationMenu.SizeChart"),
-                  //     destination: "/pagesizechartform",
-                  // },
                   {
                       label: t("Default Size Chart"),
                       destination: "/pagesizeguidedefault",
                   }, {
-                      label: t(" Size Chart"),
+                      label: t("Size Chart"),
                       destination: "/page_sizechart",
                   },
               ]}
