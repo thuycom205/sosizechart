@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Page, Button, ResourceList, Card, ResourceItem, TextStyle, Stack, Pagination } from '@shopify/polaris';
+import { Page, Button, ResourceList, Card, ResourceItem, TextStyle, Stack, Pagination,EmptyState } from '@shopify/polaris';
 import { useNavigate } from "@shopify/app-bridge-react";
 
 const SizeChartsPage = () => {
@@ -80,28 +80,21 @@ const SizeChartsPage = () => {
     const handleSelectionChange = useCallback((items) => {
         setSelectedItems(items);
     }, []);
-
-    const handleDeleteSelected = useCallback(() => {
-        // TODO: Implement delete selected size charts logic
-        // After deleting, you may want to fetch the size charts again to update the list
-    }, [selectedItems]);
-
-    const bulkActions = [
-        {
-            content: 'Delete',
-            onAction: handleDeleteSelected,
-        },
-    ];
-
-    return (
-        <Page
-            title="Size Charts"
-            primaryAction={{
-                content: 'Create Size Chart',
-                onAction: handleCreateNew,
-            }}
-        >
-            <Card>
+    const renderContent = () => {
+        if (sizeCharts.length === 0 && totalItemCount === 0) {
+            return (
+                <EmptyState
+                    heading="There is no size chart"
+                    action={{
+                        content: 'Create Size Chart',
+                        onAction: handleCreateNew,
+                    }}
+                >
+                    <p>Click the button to start creating your size chart.</p>
+                </EmptyState>
+            );
+        } else {
+            return (
                 <ResourceList
                     resourceName={{ singular: 'size chart', plural: 'size charts' }}
                     items={sizeCharts}
@@ -125,6 +118,33 @@ const SizeChartsPage = () => {
                         );
                     }}
                 />
+
+            );
+        }
+    };
+    const handleDeleteSelected = useCallback(() => {
+        // TODO: Implement delete selected size charts logic
+        // After deleting, you may want to fetch the size charts again to update the list
+    }, [selectedItems]);
+
+    const bulkActions = [
+        {
+            content: 'Delete',
+            onAction: handleDeleteSelected,
+        },
+    ];
+    return (
+        <Page
+            title="Size Charts"
+            primaryAction={{
+                content: 'Create Size Chart',
+                onAction: handleCreateNew,
+            }}
+        >
+            <Card sectioned>
+                {renderContent()}
+            </Card>
+            {sizeCharts.length > 0 && (
                 <div style={{ padding: '16px', display: 'flex', justifyContent: 'center' }}>
                     <Pagination
                         label={`Page ${currentPage} of ${Math.ceil(totalItemCount / itemsPerPage)}`}
@@ -134,7 +154,7 @@ const SizeChartsPage = () => {
                         onNext={handleNextPage}
                     />
                 </div>
-            </Card>
+            )}
         </Page>
     );
 };

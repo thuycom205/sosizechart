@@ -80,7 +80,7 @@ export default function HomePage() {
                           window.DEVPARAMS;
                           const host =
                               new URLSearchParams(window.DEVPARAMS).get("shop");
-                          navigate(`/pagesizeguidedefault` +`?shop_name=` +  host);
+                          navigate(`/page_size_chart_list` +`?shop_name=` +  host);
                       }}>
                           Go to Size Chart Management
                       </Button>
