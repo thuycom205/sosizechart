@@ -1,6 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Page, Button, ResourceList, Card, ResourceItem, TextStyle, Stack, Pagination,EmptyState } from '@shopify/polaris';
 import { useNavigate } from "@shopify/app-bridge-react";
+import { Toast } from '@shopify/polaris';
+import { Frame } from '@shopify/polaris';
 
 const SizeChartsPage = () => {
     const [sizeCharts, setSizeCharts] = useState([]);
@@ -8,6 +10,15 @@ const SizeChartsPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalItemCount, setTotalItemCount] = useState(0);
     const itemsPerPage = 50;
+
+    const [toastActive, setToastActive] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+    const [toastError, setToastError] = useState(false);
+
+    const toggleActive = useCallback(() => setToastActive((active) => !active), []);
+    const toastMarkup = toastActive ? (
+        <Toast content={toastMessage} onDismiss={toggleActive} error={toastError} />
+    ) : null;
 
     const gqueryParams = new URLSearchParams( window.DEVPARAMS);
     const [shop, setShop] = useState(gqueryParams.get('shop') || '');
@@ -122,10 +133,47 @@ const SizeChartsPage = () => {
             );
         }
     };
-    const handleDeleteSelected = useCallback(() => {
-        // TODO: Implement delete selected size charts logic
-        // After deleting, you may want to fetch the size charts again to update the list
-    }, [selectedItems]);
+    const handleDeleteSelected = useCallback(async () => {
+        if (selectedItems.length > 0) {
+            try {
+                const response = await fetch('https://lara.com/api/sizechart/delete', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Include other headers as necessary, such as authorization tokens
+                    },
+                    body: JSON.stringify({ ids: selectedItems }), // Send selected item IDs as JSON payload
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                // Assuming the server responds with JSON
+                const result = await response.json();
+                console.log('Delete result:', result);
+
+                // Update the state to remove the deleted items without refetching
+                const updatedSizeCharts = sizeCharts.filter((chart) => !selectedItems.includes(chart.id));
+                setSizeCharts(updatedSizeCharts);
+                setTotalItemCount(prevCount => prevCount - selectedItems.length);
+                setSelectedItems([]);
+
+                // Show success toast
+                setToastMessage('Size chart(s) deleted successfully.');
+                setToastError(false);
+                setToastActive(true);
+
+            } catch (error) {
+                console.error('Failed to delete size chart(s):', error);
+                // Show error toast
+                setToastMessage('Failed to delete size chart(s).');
+                setToastError(true);
+                setToastActive(true);
+            }
+        }
+    }, [selectedItems, setToastMessage, setToastError, setToastActive]);
+
 
     const bulkActions = [
         {
@@ -134,6 +182,7 @@ const SizeChartsPage = () => {
         },
     ];
     return (
+        <Frame>
         <Page
             title="Size Charts"
             primaryAction={{
@@ -155,7 +204,10 @@ const SizeChartsPage = () => {
                     />
                 </div>
             )}
+
+            {toastMarkup}
         </Page>
+        </Frame>
     );
 };
 

@@ -254,7 +254,7 @@ Route::post( '/api/sizechart/save', function ( Request $request ) {
 
 Route::post('/api/sizechart/fetch', [SizeChartController::class, 'getSizeChart']);
 Route::post('/api/sizechart/fetchDefault', [SizeChartController::class, 'getDefaultSizeChart']);
-
+Route::post('/api/sizechart/delete', [SizeChartController::class, 'delete']);
 
 Route::post('/api/sizechart/persist', [SizeChartController::class, 'persistSizeChart']);
 Route::post('/api/sizechart/persistDefault', [SizeChartController::class, 'saveDefaultSizeChart']);

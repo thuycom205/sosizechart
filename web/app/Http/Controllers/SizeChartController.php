@@ -351,5 +351,47 @@ class SizeChartController extends Controller
         }
     }
 
+    public function delete(Request $request)
+    {
+        // Validate the request to ensure 'ids' is an array
+        $data = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'required|integer',
+        ]);
 
+        $idsToDelete = $data['ids'];
+
+        // Begin transaction for atomicity
+        DB::beginTransaction();
+
+        try {
+            // Prepare SQL statement for deletion
+            $placeholders = implode(',', array_fill(0, count($idsToDelete), '?'));
+            $sql = "DELETE FROM sizecharts WHERE id IN ($placeholders)";
+
+            // Execute deletion
+            DB::delete($sql, $idsToDelete);
+
+            // If we reach here, it means no exception was thrown
+            // so it's safe to commit the transaction
+            DB::commit();
+
+            // Return a successful JSON response
+            return response()->json([
+                'success' => true,
+                'message' => 'Size chart(s) deleted successfully.'
+            ]);
+
+        } catch (\Throwable $e) {
+            // An error occurred; rollback the transaction
+            DB::rollBack();
+
+            // Return a JSON response with the error
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete size chart(s).',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
