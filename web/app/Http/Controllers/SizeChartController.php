@@ -284,4 +284,82 @@ class SizeChartController extends Controller
             return Response::json(['success' => false, 'message' => 'Failed to save size chart.', 'error' => $e->getMessage()], 500);
         }
     }
+
+    public function getDefaultSizeChart(Request $request)
+    {
+        $shopName = $request->input('shop_name');
+
+        // Fetch the default size chart for the given shop name
+        $defaultSizeChart = DB::table('sizecharts')
+                              ->where('shop_name', $shopName)
+                              ->where('is_default_sizechart', 1)
+                              ->first();
+
+        // Check if a default size chart exists and return it, otherwise return sample data
+        if ($defaultSizeChart) {
+            $defaultSizeChart->sizechart_data = unserialize($defaultSizeChart->sizechart_data);
+            return response()->json($defaultSizeChart);
+        } else {
+            return response()->json($this->getSampleData());
+        }
+    }
+
+    public function saveDefaultSizeChart(Request $request)
+    {
+        $request->validate([
+            'sizeChart' => 'required|array',
+            'title' => 'required|string',
+            'shop_name' => 'required|string',
+            'is_default_sizechart' => 'required|boolean',
+        ]);
+
+        $shopName = $request->input('shop_name');
+        $title = $request->input('title');
+        $sizeChart = serialize($request->input('sizeChart'));
+        $isDefaultSizechart =1;
+
+        try {
+            // Begin transaction
+            DB::beginTransaction();
+
+            // Check if a default size chart already exists for the shop
+            $existingDefaultSizeChart = DB::table('sizecharts')
+                                          ->where('shop_name', $shopName)
+                                          ->where('is_default_sizechart', 1)
+                                          ->first();
+
+            if ($existingDefaultSizeChart) {
+                // Update the existing default size chart
+                DB::table('sizecharts')
+                  ->where('id', $existingDefaultSizeChart->id)
+                  ->update([
+                      'sizechart_data' =>$sizeChart,
+                      'title' => $title,
+                      'updated_at' => now(),
+                  ]);
+            } else {
+                // No default size chart exists, insert a new one
+                DB::table('sizecharts')->insert([
+                    'sizechart_data' => $sizeChart,
+                    'title' => $title,
+                    'shop_name' => $shopName,
+                    'is_default_sizechart' => 1,
+                    'image_url' => 'https://cdn.shopify.com/s/files/1/0508/6409/1050/files/sizechart.png?v=1634260000', // Default image URL
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
+            // Commit transaction
+            DB::commit();
+
+            return response()->json(['success' => true, 'message' => 'Default size chart saved successfully.'], 200);
+        } catch (\Exception $e) {
+            // Rollback transaction
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => 'Failed to save default size chart.', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+
 }

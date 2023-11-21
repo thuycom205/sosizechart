@@ -19,6 +19,7 @@ import { useTranslation, Trans } from "react-i18next";
 import { trophyImage } from "../assets";
 
 import { ProductsCard } from "../components";
+import { useNavigate } from "@shopify/app-bridge-react";
 
 export default function HomePage() {
     const [sizeChartEnabled, setSizeChartEnabled] = useState(['enabled']);
@@ -30,6 +31,8 @@ export default function HomePage() {
         { label: 'Size Chart 2', value: 'chart2' },
         // Add more size chart options here
     ];
+    const navigate = useNavigate();
+
     const videoTutorialUrl = 'https://yourdomain.com/video-tutorial';
     const userManualUrl = 'https://yourdomain.com/user-manual';
   const { t } = useTranslation();
@@ -47,12 +50,7 @@ export default function HomePage() {
                       selected={sizeChartEnabled}
                       onChange={setSizeChartEnabled}
                   />
-                  {/*<Select*/}
-                  {/*    label="Default Size Chart"*/}
-                  {/*    options={sizeChartOptions}*/}
-                  {/*    onChange={setDefaultSizeChart}*/}
-                  {/*    value={defaultSizeChart}*/}
-                  {/*/>*/}
+
               </Card>
           </Layout.Section>
 
@@ -69,6 +67,20 @@ export default function HomePage() {
                       </ol>
                       <Button primary onClick={() => {
                           // Logic to navigate to Size Chart Management
+                          window.DEVPARAMS;
+                          const host =
+                              new URLSearchParams(window.DEVPARAMS).get("shop");
+                          navigate(`/pagesizeguidedefault` +`?shop_name=` +  host);
+
+                      }}>
+                          Configure Default Size Chart
+                      </Button>
+
+                      <Button primary onClick={() => {
+                          window.DEVPARAMS;
+                          const host =
+                              new URLSearchParams(window.DEVPARAMS).get("shop");
+                          navigate(`/pagesizeguidedefault` +`?shop_name=` +  host);
                       }}>
                           Go to Size Chart Management
                       </Button>

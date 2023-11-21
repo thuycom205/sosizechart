@@ -36,10 +36,8 @@ function SizeChartFormB() {
                 url: "/api/products/thuy",
                 data: formData,
                 success: function(response) {
-                    console.log('Form submitted successfully', response);
                 },
                 error: function(error) {
-                    console.error('An error occurred', error);
                 }
             });
         });

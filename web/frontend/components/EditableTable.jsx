@@ -91,11 +91,9 @@ const EditableTable = () => {
         })
             .then(response => response.json())
             .then(data => {
-                console.log('Success:', data);
                 // Handle successful submission here
             })
             .catch((error) => {
-                console.error('Error:', error);
                 // Handle errors here
             });
     };

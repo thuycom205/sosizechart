@@ -102,11 +102,9 @@ export default function Pagesizeguidedefault() {
 
             // Process the response (if necessary)
             const result = await response.json(); // Assuming the server responds with JSON
-            console.log('Save result:', result);
 
             // You may want to perform some actions after saving, such as redirecting the user
         } catch (error) {
-            console.error('Failed to save size chart:', error);
             // Handle any errors that occurred during submission
         }
     };
@@ -142,7 +140,6 @@ export default function Pagesizeguidedefault() {
         // Set the state variables
         if (editIdParam) {
             setEditId(editIdParam);
-            console.log(editId);
         }
 
         if (shopNameParam) {
@@ -153,7 +150,6 @@ export default function Pagesizeguidedefault() {
                 //if (parseInt(editId) !== 0) {
                 if (true) {
                     const requestBody = { editId: queryParams.get('editId') };
-                    console.log('fetch sizechart request body' + requestBody);
 
                     const response = await fetch('https://lara.com/api/sizechart/fetch', {
                         method: 'POST',
@@ -167,7 +163,6 @@ export default function Pagesizeguidedefault() {
                     const contentType = response.headers.get("content-type");
                     if (contentType && contentType.indexOf("application/json") !== -1) {
                         const data = await response.json();
-                        console.log(data);
                         setSizeChart(data.sizechart_data);
                         setTitle(data.title);
                         setRuleConditions({
@@ -175,9 +170,7 @@ export default function Pagesizeguidedefault() {
                             products: data.rules ? data.rules.products : [],
                             rule_id: data.rules ? data.rule_id : 0
                         });
-                        console.log('Fetched size chart:', sizeChart);
-                        console.log(sizeChart);
-                        console.log( ruleConditions);
+
                     } else {
                         setSizeChart(response.sizechart_data);
                         setTitle(response.title);
@@ -213,7 +206,6 @@ export default function Pagesizeguidedefault() {
         fetchSizeChartData();
     }, [location]);
 
-    console.log(sizeChart);
 
     if (sizeChart== null || sizeChart.length == 0 || sizeChart == undefined)  {
         return <div>Loading...</div>;
@@ -227,7 +219,6 @@ export default function Pagesizeguidedefault() {
                         content: t("Save Size Chart"),
                         onAction: () => {
                             handleSubmit();
-                            console.log("Save Size Chart");
                         },
                     }}
                     secondaryActions={[

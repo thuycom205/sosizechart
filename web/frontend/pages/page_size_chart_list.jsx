@@ -58,14 +58,12 @@ const SizeChartsPage = () => {
 
 
     const handleCreateNew = useCallback(() => {
-        console.log('Create new size chart');
         navigate(`/page_sizechart?editId=${0}`);
 
         // TODO: Implement create new size chart logic
     }, []);
 
     const handleEdit = useCallback((id) => {
-        console.log(`Edit size chart with id: ${id}`);
         navigate(`/page_sizechart?editId=${id}` + `&shop_name=${shop}`) ;
 
         // TODO: Implement edit size chart logic
@@ -84,7 +82,6 @@ const SizeChartsPage = () => {
     }, []);
 
     const handleDeleteSelected = useCallback(() => {
-        console.log('Deleting selected size charts:', selectedItems);
         // TODO: Implement delete selected size charts logic
         // After deleting, you may want to fetch the size charts again to update the list
     }, [selectedItems]);
