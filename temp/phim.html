@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Seat Map</title>
+    <style>
+        .container {
+            position: relative;
+            width: 1500px; /* This should match your Konva stage width */
+            height: 1500px; /* This should match your Konva stage height */
+            border: 1px solid #ccc;
+        }
+        .seat {
+            position: absolute;
+            cursor: pointer;
+        }
+        .seat.selected {
+            background-color: purple !important; /* Use !important to override inline styles */
+        }
+        .seat-text {
+            position: absolute;
+            pointer-events: none; /* Ignore pointer events so the click goes through to the seat div */
+        }
+        .container {
+            position: relative;
+            width: 1500px; /* This should match your Konva stage width */
+            height: 1500px; /* This should match your Konva stage height */
+            border: 1px solid #ccc;
+        }
+        .seat {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s; /* Optional: adds a transition effect when changing colors */
+        }
+        .seat.selected {
+            background-color: purple !important; /* Use !important to override inline styles */
+        }
+        .seat-text {
+            pointer-events: none; /* Ignore pointer events so the click goes through to the seat div */
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="seat-map-container" class="container"></div>
+
+<script>
+// JavaScript code provided earlier to parse Konva JSON and create HTML elements
+function createHTMLFromKonvaJSON(konvaJSON) {
+    const stageData = JSON.parse(konvaJSON); // Parse the JSON data
+    const container = document.createElement('div');
+    container.className = 'container';
+
+    stageData.children.forEach(layer => {
+      layer.children.forEach(group => {
+        group.children.forEach(shape => {
+          if (shape.className === 'Rect') {
+            const seatDiv = document.createElement('div');
+            seatDiv.className = 'seat';
+            seatDiv.style.position = 'absolute';
+            seatDiv.style.left = shape.attrs.x + 'px';
+            seatDiv.style.top = shape.attrs.y + 'px';
+            seatDiv.style.width = shape.attrs.width + 'px';
+            seatDiv.style.height = shape.attrs.height + 'px';
+            seatDiv.style.backgroundColor = shape.attrs.fill;
+            seatDiv.id = shape.attrs.id;
+            seatDiv.setAttribute('data-selected', 'false'); // Custom attribute to track selection
+
+            // Nested text span
+            const textSpan = document.createElement('span');
+            textSpan.className = 'seat-text';
+            textSpan.innerText = shape.attrs.text || '';
+            textSpan.style.color = 'white'; // Ensure the text is visible
+            textSpan.style.fontSize = shape.attrs.fontSize + 'px';
+            textSpan.style.lineHeight = shape.attrs.height + 'px'; // Center text vertically
+            textSpan.style.textAlign = 'center'; // Center text horizontally
+
+            seatDiv.appendChild(textSpan); // Add text to the seat div
+            container.appendChild(seatDiv);
+          }
+        });
+      });
+    });
+
+    document.body.appendChild(container); // Append the container to the body or any other parent element
+  }
+
+  function makeSeatsSelectable() {
+    const seats = document.querySelectorAll('.seat');
+    seats.forEach(seat => {
+      seat.addEventListener('click', () => {
+        const isSelected = seat.getAttribute('data-selected') === 'true';
+        seat.setAttribute('data-selected', !isSelected);
+        seat.style.backgroundColor = !isSelected ? 'purple' : 'grey';
+      });
+    });
+  }
+
+  // Sample JSON - Replace this with your actual data
+  var konvaJSON = '{"attrs":{"width":1500,"height":1500},"children":[{"className":"Layer","children":[{"className":"Group","attrs":{},"children":[{"className":"Rect","attrs":{"x":100,"y":100,"width":50,"height":50,"fill":"grey","id":"seat-1","text":"A1","fontSize":14}}]}]}]}';
+
+  // When the DOM is fully loaded, create the seat map and make seats selectable
+  document.addEventListener('DOMContentLoaded', function() {
+    createHTMLFromKonvaJSON(konvaJSON);
+    makeSeatsSelectable();
+  });
+
+</script>
+
+</body>
+</html>

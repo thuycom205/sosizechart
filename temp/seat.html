@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema Seat Layout Editor</title>
+    <link rel="stylesheet" href="styless.css">
+</head>
+<body>
+    <div class="screen-container">
+        <div class="screen">SCREEN</div>
+    </div>
+    <div class="layout-editor" id="layoutEditor">
+        <!-- Seating layout will be generated here -->
+    </div>
+    <div class="seat-types">
+        <div class="seat standard" onclick="selectSeatType('standard')">Standard</div>
+        <div class="seat vip" onclick="selectSeatType('vip')">VIP</div>
+        <div class="seat unavailable" onclick="selectSeatType('unavailable')">Unavailable</div>
+    </div>
+    <script src="scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Seat Layout Editor</title>
+    <script src="https://cdn.jsdelivr.net/npm/konva@7.0.5/konva.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        /* Add your CSS styles here */
+        #container {
+            width: 1500px;
+            height: 1500px;
+            border: 1px solid #ccc;
+        }
+        /* Style for your buttons and input fields */
+        .button {
+            margin: 5px;
+            padding: 10px;
+        }
+        .input {
+            margin: 5px;
+            padding: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <input type="text" id="lc_label_input" class="input" placeholder="Enter Label">
+    <button onclick="buildDefaultMap()" class="button">Build Default Map</button>
+    <button onclick="pullSeat()" class="button">Highlight Seat</button>
+    <button onclick="deleteSeat()" class="button">Delete Seat</button>
+    <button onclick="addLabelSeat()" class="button">Add Label to Seat</button>
+    <button onclick="addtagsSeat()" class="button">Mark as VIP</button>
+    <button onclick="submitSeatSetting()" class="button">Save Layout</button>
+    <button onclick="rebuildSeat()" class="button">Rebuild Layout</button>
+
+    <button onclick="reserveSelectedSeats()" class="button">Rebuild Layout</button>
+
+
+    <script src="kv.js"></script>
+</body>
+</html>

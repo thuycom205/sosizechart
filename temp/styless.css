@@ -1,0 +1,70 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+.screen-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.screen {
+    display: inline-block;
+    background-color: #666;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.layout-editor {
+    display: grid;
+    gap: 2px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.seat {
+    width: 30px;
+    height: 30px;
+    background-color: #ddd;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.seat > span {
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+}
+
+.vip {
+    background-color: gold;
+}
+
+.unavailable {
+    background-color: red;
+}
+
+.standard {
+    background-color: #ddd;
+}
+
+.seat-types {
+    text-align: center;
+}
+
+.seat-types .seat {
+    display: inline-block;
+    margin: 5px;
+    cursor: pointer;
+}
+
+/* Additional styles for improved UI can be added here */

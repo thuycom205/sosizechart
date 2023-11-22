@@ -265,7 +265,19 @@ class SizeChartController extends Controller
                     ]);
                 }
             }
-
+            // Handle the products
+            if (isset($rule['products'])) {
+                DB::table('sizechart_rule_product')->where('rule_id', $rule_id)->delete();
+                foreach ($rule['products'] as $product) {
+                    DB::table('sizechart_rule_product')->insert([
+                        'rule_id' => $rule_id,
+                        'product_id' => $product['id'],
+                        'rule_priority' => 0,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
             DB::commit();
 
             return Response::json(['success' => true, 'message' => 'Size chart saved successfully.', 'id' => $id]);
@@ -394,4 +406,53 @@ class SizeChartController extends Controller
             ], 500);
         }
     }
+
+    public function getSizeChartForFrontend(Request $request)
+    {
+        $productId = $request->input('product_id');
+        $shopName = $request->input('shop_name');
+
+        try {
+            $ruleProduct = DB::table('sizechart_rule_product')
+                             ->where('product_id', $productId)
+                             ->orderBy('rule_priority', 'asc')
+                             ->orderBy('created_at', 'desc')
+                             ->first();
+
+            $sizechartId = null;
+
+            if ($ruleProduct) {
+                $sizechartId = DB::table('sizechart_rule')
+                                 ->where('id', $ruleProduct->rule_id)
+                                 ->value('sizechart_id');
+            }
+
+            // If no specific size chart for product, use default size chart
+            if (!$sizechartId) {
+                $sizechartId = DB::table('sizecharts')
+                                 ->where('shop_name', $shopName)
+                                 ->where('is_default_sizechart', 1)
+                                 ->value('id');
+            }
+
+            if (!$sizechartId) {
+                return Response::json(['success' => false, 'message' => 'No size chart found.']);
+            }
+
+            $sizechart = DB::table('sizecharts')
+                           ->where('id', $sizechartId)
+                           ->first();
+
+            if (!$sizechart) {
+                return Response::json(['success' => false, 'message' => 'No size chart data found.']);
+            }
+
+            $sizechart->sizechart_data = unserialize($sizechart->sizechart_data);
+
+            return Response::json(['success' => true, 'sizechart' => $sizechart]);
+        } catch (\Exception $e) {
+            return Response::json(['success' => false, 'message' => 'Server error.', 'error' => $e->getMessage()], 500);
+        }
+    }
+
 }
