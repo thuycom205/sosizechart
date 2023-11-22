@@ -64,11 +64,32 @@ function renderSizeChart(sizechart) {
 function renderDefaultSizeChart() {
     // Define a default size chart structure here...
     // The structure should be similar to the one expected from the API
-    var defaultSizeChart = {...}; // Replace with default data
+    var defaultSizeChart = {
+        "success": true,
+        "sizechart": {
+            "id": 1,
+            "sizechart_data": [
+                ["Size", "S", "M", "L", "XL"],
+                ["EU Size", "46", "50", "54", "58"],
+                ["US Size", "36", "40", "44", "48"],
+                ["Chest (in)", "34-36", "38-40", "42-44", "46-48"],
+                ["Waist (in)", "28-30", "32-34", "36-38", "40-42"]
+            ],
+            "image_url": "http://example.com/path/to/sizechart-image.jpg",
+            "shop_name": "Example Shop",
+            "created_at": "2021-01-01T00:00:00Z",
+            "updated_at": "2021-01-01T00:00:00Z",
+            "is_default_sizechart": 1,
+            "title": "Default Men's T-Shirts Size Chart"
+        }
+    }; // Replace with default data
 
     renderSizeChart(defaultSizeChart);
 }
 
-// Call the functions to fetch and display the size chart
-fetchSizeChart();
-initSizeChart();
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize size chart modal and fetch size chart data
+    initSizeChart();
+    fetchSizeChart();
+});

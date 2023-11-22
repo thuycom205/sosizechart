@@ -15,19 +15,14 @@ class CreateSizechartRuleTable extends Migration
     {
         Schema::create('sizechart_rule', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('title')->default('Untitled'); // Set default value for 'title'
+            $table->string('title', 255)->default('Untitled');
             $table->unsignedBigInteger('sizechart_id');
-            $table->string('shop_name')->nullable();
+            $table->string('shop_name', 255)->nullable();
             $table->integer('priority')->default(0);
             $table->text('rules');
             $table->text('product_ids')->nullable();
-            $table->timestamp('created_at')->nullable();
-            $table->timestamp('updated_at')->nullable();
-        });
+            $table->timestamps();
 
-        // If you want to set a specific collation for the table
-        Schema::table('sizechart_rule', function (Blueprint $table) {
-            $table->collation = 'utf8mb4_unicode_ci';
         });
     }
     /**

@@ -14,11 +14,15 @@ class CreateSizechartsTable extends Migration
     public function up()
     {
         Schema::create('sizecharts', function (Blueprint $table) {
-            $table->id(); // This will create an auto-incrementing primary key column named 'id'
-            $table->text('sizechart_data'); // A text column for sizechart data
-            $table->string('image_url'); // A varchar column for the image URL
-            $table->string('shop_name'); // A varchar column for the shop name
-            $table->timestamps(); // Adds created_at and updated_at columns
+            $table->bigIncrements('id');
+            $table->text('sizechart_data');
+            $table->string('image_url', 255);
+            $table->string('shop_name', 255);
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
+            $table->tinyInteger('is_default_sizechart')->default(0);
+            $table->string('title', 255)->default('Untitled');
+            $table->collation = 'utf8mb4_unicode_ci';
         });
     }
 
