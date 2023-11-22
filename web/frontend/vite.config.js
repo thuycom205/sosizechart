@@ -46,7 +46,7 @@ export default defineConfig({
   root: dirname(fileURLToPath(import.meta.url)),
   plugins: [react()],
   define: {
-    "process.env.SHOPIFY_API_KEY": JSON.stringify("8ae78fd311f9834c80f2b1a4c01057e4"),
+    "process.env.SHOPIFY_API_KEY": JSON.stringify("224ed2ce6789846c4bffb87a457bad46"),
   },
     build: {
         sourcemap: true, // Correct place to disable sourcemaps
