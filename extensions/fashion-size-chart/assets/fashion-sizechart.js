@@ -23,7 +23,7 @@ function initSizeChart() {
 function fetchSizeChart() {
     var productId = document.querySelector('p[data-product-id]').getAttribute('data-product-id');
 
-    fetch(`https://lara.com/api/sizechart/get_for_frontend?shop=${window.Shopify.shop}&product_id=${productId}`)
+    fetch(`https://xapp.thexseed.com/api/sizechart/get_for_frontend?shop=${window.Shopify.shop}&product_id=${productId}`)
         .then(response => {
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             return response.json();

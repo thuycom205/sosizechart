@@ -55,7 +55,7 @@ export default function Pagesizeguidedefault() {
                     is_default_sizechart: 1,
                 };
 
-                const response = await fetch('https://lara.com/api/sizechart/persistDefault', {
+                const response = await fetch(window.dev_server + '/api/sizechart/persistDefault', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ export default function Pagesizeguidedefault() {
                         is_default_sizechart: 1
                     };
 
-                    const response = await fetch('https://lara.com/api/sizechart/fetchDefault', {
+                    const response = await fetch(window.dev_server + '/api/sizechart/fetchDefault', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

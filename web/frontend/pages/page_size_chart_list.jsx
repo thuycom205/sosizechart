@@ -35,7 +35,7 @@ const SizeChartsPage = () => {
             };
 
             try {
-                const response = await fetch('https://lara.com/api/sizecharts/fetchList', {
+                const response = await fetch(window.dev_server + '/api/sizecharts/fetchList', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -136,7 +136,7 @@ const SizeChartsPage = () => {
     const handleDeleteSelected = useCallback(async () => {
         if (selectedItems.length > 0) {
             try {
-                const response = await fetch('https://lara.com/api/sizechart/delete', {
+                const response = await fetch(window.dev_server + '/api/sizechart/delete', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

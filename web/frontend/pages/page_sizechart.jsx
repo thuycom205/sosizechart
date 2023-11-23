@@ -95,7 +95,7 @@ export default function Pagesizeguidedefault() {
                     rule_id: ruleConditions.rule_id
                 };
 
-                const response = await fetch('https://lara.com/api/sizechart/persist', {
+                const response = await fetch(window.dev_server + '/api/sizechart/persist', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -188,7 +188,7 @@ export default function Pagesizeguidedefault() {
                 if (true) {
                     const requestBody = { editId: queryParams.get('editId') };
 
-                    const response = await fetch('https://lara.com/api/sizechart/fetch', {
+                    const response = await fetch(window.dev_server + '/api/sizechart/fetch', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

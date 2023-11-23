@@ -38,6 +38,8 @@ export function AppBridgeProvider({ children }) {
     const host =
       new URLSearchParams(location.search).get("host") ||
       window.__SHOPIFY_DEV_HOST;
+
+     window.dev_server = "https://xapp.thexseed.com";
 //
       const params = new URLSearchParams(location.search);
       const allParams = [];
