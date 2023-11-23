@@ -2,7 +2,7 @@
 .sizeChartModal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 1000; /* A high z-index value */
     left: 0;
     top: 0;
     width: 100%; /* Full width */

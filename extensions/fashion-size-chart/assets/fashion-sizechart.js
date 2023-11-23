@@ -1,4 +1,47 @@
 // Function to initialize the size chart modal interactions
+document.addEventListener('DOMContentLoaded', function() {
+    createSizeChartButton();
+    initSizeChart();
+    fetchSizeChart();
+});
+
+function createSizeChartButton() {
+    var btn = document.createElement('button');
+    btn.id = 'sizeChartBtn';
+    btn.innerText = 'Size Chart';
+    btn.style.position = 'fixed';
+    btn.style.right = '20px';
+    btn.style.top = '50%';
+    btn.style.transform = 'translateY(-50%)';
+    btn.style.writingMode = 'vertical-lr';
+    document.body.appendChild(btn);
+}
+
+function initSizeChart() {
+    var modal = document.getElementById("sizeChartModal");
+    var btn = document.getElementById("sizeChartBtn");
+    var span = document.getElementsByClassName("sizeChartModal-close")[0];
+
+    if (modal && span) {
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+    }
+}
+
+// ... rest of the functions (fetchSizeChart, renderSizeChart, renderDefaultSizeChart) remain unchanged
+
+
 function initSizeChart() {
     var modal = document.getElementById("sizeChartModal");
     var btn = document.getElementById("sizeChartBtn");
@@ -64,32 +107,13 @@ function renderSizeChart(sizechart) {
 function renderDefaultSizeChart() {
     // Define a default size chart structure here...
     // The structure should be similar to the one expected from the API
-    var defaultSizeChart = {
-        "success": true,
-        "sizechart": {
-            "id": 1,
-            "sizechart_data": [
-                ["Size", "S", "M", "L", "XL"],
-                ["EU Size", "46", "50", "54", "58"],
-                ["US Size", "36", "40", "44", "48"],
-                ["Chest (in)", "34-36", "38-40", "42-44", "46-48"],
-                ["Waist (in)", "28-30", "32-34", "36-38", "40-42"]
-            ],
-            "image_url": "http://example.com/path/to/sizechart-image.jpg",
-            "shop_name": "Example Shop",
-            "created_at": "2021-01-01T00:00:00Z",
-            "updated_at": "2021-01-01T00:00:00Z",
-            "is_default_sizechart": 1,
-            "title": "Default Men's T-Shirts Size Chart"
-        }
-    }; // Replace with default data
-
+    var defaultSizeChart = [
+        ["Size", "S", "M", "L", "XL"],
+        ["EU Size", "46", "50", "54", "58"],
+        ["US Size", "36", "40", "44", "48"],
+        ["Chest (in)", "34-36", "38-40", "42-44", "46-48"],
+        ["Waist (in)", "28-30", "32-34", "36-38", "40-42"]
+    ]; // Replace
     renderSizeChart(defaultSizeChart);
 }
 
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize size chart modal and fetch size chart data
-    initSizeChart();
-    fetchSizeChart();
-});

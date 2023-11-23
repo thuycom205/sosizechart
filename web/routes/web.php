@@ -260,6 +260,6 @@ Route::post('/api/sizechart/persist', [SizeChartController::class, 'persistSizeC
 Route::post('/api/sizechart/persistDefault', [SizeChartController::class, 'saveDefaultSizeChart']);
 Route::post('/api/sizecharts/fetchList', [SizeChartController::class, 'fetchList']);
 
-Route::get('/api/sizechart/get_for_frontend', 'SizeChartController@getSizeChartForFrontend');
+Route::get('/api/sizechart/get_for_frontend', [SizeChartController::class, 'getSizeChartForFrontend']);
 
 
