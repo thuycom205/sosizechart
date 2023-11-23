@@ -12,10 +12,18 @@ function createSizeChartButton() {
     btn.style.position = 'fixed';
     btn.style.right = '20px';
     btn.style.top = '50%';
-    btn.style.transform = 'translateY(-50%)';
-    btn.style.writingMode = 'vertical-lr';
+    btn.style.transform = 'translateY(-50%) rotate(270deg)'; // Rotate button for vertical reading
+    btn.style.backgroundColor = '#007bff'; // Bootstrap primary color
+    btn.style.color = 'white';
+    btn.style.border = 'none';
+    btn.style.padding = '10px 15px';
+    btn.style.cursor = 'pointer';
+    btn.style.fontSize = '18px';
+    btn.style.borderRadius = '5px';
+    btn.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
     document.body.appendChild(btn);
 }
+
 
 function initSizeChart() {
     var modal = document.getElementById("sizeChartModal");
@@ -114,6 +122,8 @@ function renderDefaultSizeChart() {
         ["Chest (in)", "34-36", "38-40", "42-44", "46-48"],
         ["Waist (in)", "28-30", "32-34", "36-38", "40-42"]
     ]; // Replace
-    renderSizeChart(defaultSizeChart);
-}
+    renderSizeChart({
+        sizechart_data: defaultSizeChart,
+        image_url: "http://example.com/path/to/sizechart-image.jpg"
+    });}
 
