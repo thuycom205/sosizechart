@@ -148,6 +148,6 @@ function renderDefaultSizeChart() {
     ]; // Replace
     renderSizeChart({
         sizechart_data: defaultSizeChart,
-        image_url: "http://example.com/path/to/sizechart-image.jpg"
+        image_url: ""
     });}
 
