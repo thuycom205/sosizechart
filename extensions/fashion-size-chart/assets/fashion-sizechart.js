@@ -6,24 +6,45 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function createSizeChartButton() {
-    var btn = document.createElement('button');
-    btn.id = 'sizeChartBtn';
-    btn.innerText = 'Size Chart';
-    btn.style.position = 'fixed';
-    btn.style.right = '20px';
-    btn.style.top = '50%';
-    btn.style.transform = 'translateY(-50%) rotate(270deg)'; // Rotate button for vertical reading
-    btn.style.backgroundColor = '#007bff'; // Bootstrap primary color
-    btn.style.color = 'white';
-    btn.style.border = 'none';
-    btn.style.padding = '10px 15px';
-    btn.style.cursor = 'pointer';
-    btn.style.fontSize = '18px';
-    btn.style.borderRadius = '5px';
-    btn.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
-    document.body.appendChild(btn);
-}
+    var btnContainer = document.createElement('div');
+    btnContainer.className = 'sizeChartBtn';
+    btnContainer.style.cssText = `
+        position: fixed;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        font-size: 18px;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    `;
 
+    var svgIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svgIcon.setAttribute('class', 'IconWrapper-module--icon__1nWiK IconWrapper-module--small__ZImL2');
+    svgIcon.setAttribute('viewBox', '0 0 24 24');
+    svgIcon.setAttribute('focusable', 'false');
+    svgIcon.innerHTML = `<path d="M24,8 L24,17 L-1.8189894e-12,17 L-1.8189894e-12,8 L24,8 Z M22,11 L21,11 L21,9 L19,9 L19,13 L18,13 L18,9 L16,9 L16,11 L15,11 L15,9 L13,9 L13,13 L12,13 L12,9 L10,9 L10,11 L9,11 L9,9 L7,9 L7,13 L6,13 L6,9 L4,9 L4,11 L3,11 L3,9 L1,9 L1,16 L23,16 L23,9 L22,9 L22,11 Z" transform="translate(12.000000, 12.500000) rotate(-45.000000) translate(-12.000000, -12.500000) "></path>`;
+    svgIcon.style.height = '16px';
+    svgIcon.style.transform = 'rotate(-45deg)';
+
+    var textSpan = document.createElement('span');
+    textSpan.textContent = 'Size Chart';
+    textSpan.style.writingMode = 'vertical-lr';
+    textSpan.style.textOrientation = 'mixed';
+
+    btnContainer.appendChild(svgIcon);
+    btnContainer.appendChild(textSpan);
+
+    document.body.appendChild(btnContainer);
+}
 
 function initSizeChart() {
     var modal = document.getElementById("sizeChartModal");
@@ -52,12 +73,15 @@ function initSizeChart() {
 
 function initSizeChart() {
     var modal = document.getElementById("sizeChartModal");
-    var btn = document.getElementById("sizeChartBtn");
+    var btn = document.getElementsByClassName("sizeChartBtn");
     var span = document.getElementsByClassName("sizeChartModal-close")[0];
 
-    btn.onclick = function() {
-        modal.style.display = "block";
-    }
+    // As there might be multiple buttons, add click event to all buttons
+    Array.from(btns).forEach(function(btn) {
+        btn.onclick = function() {
+            modal.style.display = "block";
+        };
+    });
 
     span.onclick = function() {
         modal.style.display = "none";
