@@ -6,44 +6,32 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function createSizeChartButton() {
-    var btnContainer = document.createElement('div');
-    btnContainer.className = 'sizeChartBtn';
-    btnContainer.style.cssText = `
-        position: fixed;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: #007bff;
-        color: white;
-        border: none;
-        padding: 10px;
-        cursor: pointer;
-        font-size: 18px;
-        border-top-left-radius: 5px;
-        border-bottom-left-radius: 5px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    `;
 
-    var svgIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svgIcon.setAttribute('class', 'IconWrapper-module--icon__1nWiK IconWrapper-module--small__ZImL2');
-    svgIcon.setAttribute('viewBox', '0 0 24 24');
-    svgIcon.setAttribute('focusable', 'false');
-    svgIcon.innerHTML = `<path d="M24,8 L24,17 L-1.8189894e-12,17 L-1.8189894e-12,8 L24,8 Z M22,11 L21,11 L21,9 L19,9 L19,13 L18,13 L18,9 L16,9 L16,11 L15,11 L15,9 L13,9 L13,13 L12,13 L12,9 L10,9 L10,11 L9,11 L9,9 L7,9 L7,13 L6,13 L6,9 L4,9 L4,11 L3,11 L3,9 L1,9 L1,16 L23,16 L23,9 L22,9 L22,11 Z" transform="translate(12.000000, 12.500000) rotate(-45.000000) translate(-12.000000, -12.500000) "></path>`;
-    svgIcon.style.height = '16px';
-    svgIcon.style.transform = 'rotate(-45deg)';
+    // Create a new div to act as the button
+    var btnDiv = document.createElement('div');
+    btnDiv.className = 'sizeChartBtn';
+    btnDiv.style = 'background: rgb(255, 255, 255); border-color: rgb(0, 0, 0); border-radius: 11px 11px 0px 0px; fill: rgb(35, 35, 35); width: 101px; height: 35px; position: fixed; right: 10px; top: 50%; transform: translateY(-50%) rotate(0deg); z-index: 1000; cursor: pointer; display: flex; align-items: center; justify-content: center;';
 
+// Create the SVG element
+    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.innerHTML = '<path d="M509.502,104.908L407.097,2.502c-3.337-3.337-8.73-3.337-12.067,0L2.502,395.03c-3.337,3.337-3.337,8.73,0,12.067 l102.405,102.405c1.596,1.604,3.772,2.5,6.033,2.5c2.261,0,4.429-0.896,6.033-2.5l392.527-392.527 c1.604-1.596,2.5-3.772,2.5-6.033C512.002,108.68,511.106,106.512,509.502,104.908z M110.941,491.402l-90.338-90.338 L401.063,20.603l90.338,90.338L110.941,491.402z"/>';
+    svg.setAttribute('class', 'float-button-img avada-link-icon');
+    svg.style = 'fill: rgb(35, 35, 35);';
+
+// Create a span for the button text
     var textSpan = document.createElement('span');
-    textSpan.textContent = 'Size Chart';
-    textSpan.style.writingMode = 'vertical-lr';
-    textSpan.style.textOrientation = 'mixed';
+    textSpan.className = 'float-button-text has-icon';
+    textSpan.style = 'color: rgb(35, 35, 35);';
+    textSpan.textContent = 'Size chart';
 
-    btnContainer.appendChild(svgIcon);
-    btnContainer.appendChild(textSpan);
+// Append the SVG and text span to the button div
+    btnDiv.appendChild(svg);
+    btnDiv.appendChild(textSpan);
 
-    document.body.appendChild(btnContainer);
+// Append the button div to the body
+    document.body.appendChild(btnDiv);
+
+
 }
 
 function initSizeChart() {
@@ -73,7 +61,7 @@ function initSizeChart() {
 
 function initSizeChart() {
     var modal = document.getElementById("sizeChartModal");
-    var btn = document.getElementsByClassName("sizeChartBtn");
+    var btns = document.getElementsByClassName("sizeChartBtn");
     var span = document.getElementsByClassName("sizeChartModal-close")[0];
 
     // As there might be multiple buttons, add click event to all buttons
