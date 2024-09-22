@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace App\Http\Middlewarex;
 
 use App\Lib\AuthRedirection;
 use App\Models\Session;

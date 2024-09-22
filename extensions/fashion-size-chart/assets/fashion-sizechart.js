@@ -15,7 +15,7 @@ function createSizeChartButton() {
 // Create the SVG element
     var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.innerHTML = '<path d="M509.502,104.908L407.097,2.502c-3.337-3.337-8.73-3.337-12.067,0L2.502,395.03c-3.337,3.337-3.337,8.73,0,12.067 l102.405,102.405c1.596,1.604,3.772,2.5,6.033,2.5c2.261,0,4.429-0.896,6.033-2.5l392.527-392.527 c1.604-1.596,2.5-3.772,2.5-6.033C512.002,108.68,511.106,106.512,509.502,104.908z M110.941,491.402l-90.338-90.338 L401.063,20.603l90.338,90.338L110.941,491.402z"/>';
-    svg.setAttribute('class', 'float-button-img avada-link-icon');
+    svg.setAttribute('class', 'float-button-img xseed-link-icon');
     svg.style = 'fill: rgb(35, 35, 35);';
 
 // Create a span for the button text
